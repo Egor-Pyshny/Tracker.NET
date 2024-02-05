@@ -1,0 +1,115 @@
+﻿<UserControl x:Class="Tracker.UserControls.SettingsWindowControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
+             xmlns:local="clr-namespace:Tracker.UserControls"
+             mc:Ignorable="d" Name="Settings_Page"
+             d:DesignHeight="585" d:DesignWidth="815">
+    <Grid Background="#ffffff" x:Name="content_grid"  Grid.Row="1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                <TextBlock HorizontalAlignment="Center" 
+                           VerticalAlignment="Center" 
+                           FontSize="36">Calibrating</TextBlock>
+            </Border>
+        </Grid>
+        <Grid Grid.Row="0" Grid.Column="1">
+            <Border BorderBrush="Black" BorderThickness="1,0,1,1">
+                <TextBlock HorizontalAlignment="Center" 
+                       VerticalAlignment="Center" 
+                       FontSize="36">Window</TextBlock>
+            </Border>
+        </Grid>
+        <Grid Grid.Row="0" Grid.Column="2">
+            <Border BorderBrush="Black" BorderThickness="0,0,0,1">
+                <TextBlock HorizontalAlignment="Center" 
+                           VerticalAlignment="Center" 
+                           FontSize="36">Connection</TextBlock>
+            </Border>
+        </Grid>
+        <Grid Grid.Row="1">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20">
+                <Button FontSize="17" Foreground="Black" Name="center_calibrating"
+                materialDesign:ButtonProgressAssist.IsIndeterminate="False"
+                materialDesign:ButtonProgressAssist.IsIndicatorVisible="True"
+                materialDesign:ButtonProgressAssist.Value="-1" Width="170"
+                VerticalAlignment="Top" HorizontalAlignment="Center"
+                Style="{StaticResource MaterialDesignOutlinedButton}" 
+                Cursor="Hand" Height="60" Click="center_calibrating_Click">
+                    <TextBlock TextWrapping="Wrap">Start center calibrating</TextBlock>
+                </Button>
+
+                <TextBox
+                Height="77" Width="170" materialDesign:HintAssist.Hint="X angle"
+                HorizontalAlignment="Center" HorizontalContentAlignment="Center"
+                VerticalAlignment="Top" Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                FontSize="32" IsEnabled="False" Margin="0,20,0,0" Name="x_textbox"/>
+                <Button Margin="0,10,0,0" FontSize="17" Foreground="Black" Name="x_calibrating"
+                materialDesign:ButtonProgressAssist.IsIndeterminate="False"
+                materialDesign:ButtonProgressAssist.IsIndicatorVisible="True"
+                materialDesign:ButtonProgressAssist.Value="-1" Width="170"
+                Content="Start calibrating X" VerticalAlignment="Top" HorizontalAlignment="Center"
+                Style="{StaticResource MaterialDesignOutlinedButton}" Click="x_calibrating_Click" Cursor="Hand"/>
+
+                <TextBox
+                Height="77" Width="170" materialDesign:HintAssist.Hint="Y angle"
+                HorizontalAlignment="Center" HorizontalContentAlignment="Center"
+                VerticalAlignment="Top" Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                FontSize="32" IsEnabled="False" Margin="0,20,0,0" Name="y_textbox" Cursor="Hand"/>
+                <Button Margin="0,10,0,0" FontSize="17" Foreground="Black" Name="y_calibrating"
+                materialDesign:ButtonProgressAssist.IsIndeterminate="False"
+                materialDesign:ButtonProgressAssist.IsIndicatorVisible="True"
+                materialDesign:ButtonProgressAssist.Value="-1" Width="170"
+                Content="Start calibrating Y" VerticalAlignment="Top" HorizontalAlignment="Center"
+                Style="{StaticResource MaterialDesignOutlinedButton}" Click="y_calibrating_Click"/>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="1" Grid.Column="1">
+            <Border BorderBrush="Black" BorderThickness="1,0,1,0">
+                <ComboBox
+                    VerticalAlignment="Top" Margin="0,20" Width="170" materialDesign:HintAssist.HelperTextFontSize="15"
+                    MinWidth="128" HorizontalAlignment="Center" Name="resolution_cmb"      
+                    materialDesign:HintAssist.HelperText="Select one resolution"
+                    materialDesign:HintAssist.Hint="Resolution" FontSize="17"
+                    materialDesign:TextFieldAssist.UnderlineBrush="Black"
+                    Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                    <ComboBoxItem Content="800x600"/>
+                    <ComboBoxItem Content="1280x720"/>
+                    <ComboBoxItem Content="Full screen"/>
+                </ComboBox>
+            </Border>
+        </Grid>
+        <Grid Grid.Row="1" Grid.Column="2">
+            <StackPanel Margin="0,20" VerticalAlignment="Top" HorizontalAlignment="Center">
+                <TextBox materialDesign:HintAssist.HelperText ="Disk IP address" Width="170" 
+                         materialDesign:HintAssist.Hint="IP address" AcceptsReturn="True" FontSize="17" 
+                         materialDesign:HintAssist.HelperTextFontSize="15" TextWrapping="Wrap"
+                         Text="192.168.0.0" Name="ip_txtb"
+                         Style="{StaticResource MaterialDesignFilledTextBox}"/>
+                <TextBox materialDesign:HintAssist.HelperText ="Disk port" Width="170" 
+                         materialDesign:HintAssist.Hint="Port" AcceptsReturn="True" FontSize="17" 
+                         materialDesign:HintAssist.HelperTextFontSize="15" TextWrapping="Wrap"
+                         Text="9998" Margin="0,40" Name="port_txtb"
+                         Style="{StaticResource MaterialDesignFilledTextBox}"/>
+                <Button FontSize="17" Foreground="Black" Name="set_default"
+                        materialDesign:ButtonProgressAssist.IsIndeterminate="False"
+                        materialDesign:ButtonProgressAssist.IsIndicatorVisible="True"
+                        materialDesign:ButtonProgressAssist.Value="-1" Width="170"
+                        VerticalAlignment="Top" HorizontalAlignment="Center"
+                        Style="{StaticResource MaterialDesignOutlinedButton}" 
+                        Cursor="Hand" Content="Set default" Click="set_default_Click"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,94 @@
+﻿<Window x:Class="Tracker.LevelCreatingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
+        xmlns:controls ="clr-namespace:Tracker.UserControls.Targets"
+        mc:Ignorable="d"
+        Title="MainWindow"
+        FontSize="18" FontFamily="{DynamicResource MaterialDesignFont}" ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen" WindowStyle="None" AllowsTransparency="True" Background="Transparent" 
+        Height="780" Width="1530">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid Background="Black" x:Name="taskbar" MouseDown="taskbar_MouseDown">
+                <TextBlock Foreground="#ffffffff" Name="current_page"
+                               HorizontalAlignment="Center" 
+                               VerticalAlignment="Center" 
+                               FontSize="36">
+                        Редактор уровней
+                </TextBlock>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button x:Name="BtnMinimize" Height="30" 
+                                Width="30" HorizontalAlignment="Right" Margin="5"
+                                VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" 
+                                Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#ffffff" 
+                                Click="BtnMinimize_Click" 
+                                MouseEnter="BtnMinimize_MouseEnter" 
+                                MouseLeave="BtnMinimize_MouseLeave">
+                        <materialDesign:PackIcon Kind="WindowMinimize" Width="25" Height="25"/>
+                    </Button>
+                    <Button Height="30" Width="30" 
+                                Name="BtnClose" VerticalAlignment="Center" Margin="5"
+                                Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" 
+                                Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#ffffff" 
+                                Click="BtnClose_Click" 
+                                MouseEnter="BtnClose_MouseEnter" 
+                                MouseLeave="BtnClose_MouseLeave">
+                        <materialDesign:PackIcon Kind="Close" Width="25" Height="25"/>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Background="#05B790">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="500"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid>
+                    <ListView x:Name="ListViewTargets" Foreground="#000000" Visibility="Visible"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionMode="Multiple" 
+                              SelectionChanged="ListViewTargets_SelectionChanged">
+                        <ListViewItem HorizontalContentAlignment="Center" x:Name="_5section">
+                            <controls:_5SectionTargetControl HorizontalAlignment="Center" Height="150" />
+                        </ListViewItem>
+                        <ListViewItem HorizontalContentAlignment="Center" x:Name="_4section" >
+                            <controls:_4SectionTargetControl HorizontalAlignment="Center" Height="100" />
+                        </ListViewItem>
+                        <ListViewItem HorizontalContentAlignment="Center" x:Name="_3section" >
+                            <controls:_3SectionTargetControl HorizontalAlignment="Center" Height="50" />
+                        </ListViewItem>
+                    </ListView>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <Border BorderBrush="Black" BorderThickness="0,1,0,0">
+                        <StackPanel>
+                            <TextBox Width="170" materialDesign:HintAssist.Hint="X координата" AcceptsReturn="True" 
+                                     FontSize="16" TextWrapping="Wrap" Margin="0,10" Name="x_txtb" 
+                                     Style="{StaticResource MaterialDesignFilledTextBox}"/>
+                            <TextBox Width="170" materialDesign:HintAssist.Hint="Y координата" AcceptsReturn="True" 
+                                     FontSize="16" TextWrapping="Wrap" Margin="0,10" Name="y_txtb" 
+                                     Style="{StaticResource MaterialDesignFilledTextBox}"/>
+                            <TextBox Width="170" materialDesign:HintAssist.Hint="Время жизни" AcceptsReturn="True" 
+                                     FontSize="16" TextWrapping="Wrap" Margin="0,10" Name="ttl_txtb" 
+                                     Style="{StaticResource MaterialDesignFilledTextBox}"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Grid>
+            <Grid Background="#ffffff" Grid.Column="1" Name="content_grid">
+                <controls:_3SectionTargetControl Margin="422,170,708,400" Width="150" Height="150"></controls:_3SectionTargetControl>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
