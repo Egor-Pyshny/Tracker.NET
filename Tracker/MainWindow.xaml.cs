@@ -5,6 +5,8 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using Tracker.AppContext;
+using Tracker.Controllers.DataBaseController;
 using Tracker.Data;
 using Tracker.UserControls;
 using Tracker.UserControls.Scope;
@@ -16,7 +18,6 @@ namespace Tracker
     /// </summary>
     public partial class MainWindow : Window
     {
-        private int Max = 50;
         private bool opened = false;
         public Dictionary<string, UserControl> controls = new Dictionary<string, UserControl>
         {
@@ -27,6 +28,7 @@ namespace Tracker
         public MainWindow()
         {
             InitializeComponent();
+            this.DataContext = Context.Game;
             MyWindowController.register(this);
             control = controls["ItemPlay"];
             Reciver.Start();
@@ -90,13 +92,6 @@ namespace Tracker
             (sender as Button).Opacity = 1;
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            Reciver.Stop();
-            (controls["ItemSettings"] as SettingsWindowControl).Stop();
-            App.Current.Shutdown();
-        }
-
         private void taskbar_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
@@ -108,12 +103,10 @@ namespace Tracker
         public void SwitchToGameWindow()
         {
             this.Hide();
-            Scope.step = (int)(controls["ItemSettings"] as MainPageControl).sens_slider.Value;
-            GameWindow game = MyWindowController.game();
-            game.Width = 1280;
-            game.Height = 720 + 60;
-            //game.OnGameStart();
-            game.Show();
+            //Scope.step = (int)(controls["ItemSettings"] as MainPageControl).sens_slider.Value;
+            Context.Game.GameAreaHeight = 720;
+            Context.Game.GameAreaWidth = 1280;
+            MyWindowController.game().Show();
         }
 
         private void ListViewMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -124,7 +117,7 @@ namespace Tracker
                 if (control is SettingsWindowControl) (control as SettingsWindowControl).StopReciving();
                 control = controls[((ListViewItem)((ListView)sender).SelectedItem)?.Name];
                 if (page == "ItemSettings") (control as SettingsWindowControl).StartReciving();
-                current_page.Text = control.Name.Replace("_", " ");
+                current_page.Text = (control as IControl).PageName;
                 content_grid.Children.Clear();
                 content_grid.Children.Add(control);
             }

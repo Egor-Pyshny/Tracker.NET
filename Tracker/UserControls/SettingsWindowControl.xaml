@@ -54,7 +54,15 @@
                 Height="77" Width="170" materialDesign:HintAssist.Hint="X angle"
                 HorizontalAlignment="Center" HorizontalContentAlignment="Center"
                 VerticalAlignment="Top" Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                FontSize="32" IsEnabled="False" Margin="0,20,0,0" Name="x_textbox"/>
+                FontSize="32" IsEnabled="False" Margin="0,20,0,0" Name="x_textbox">
+                    <TextBox.Text>
+                        <Binding Path="XAngle" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <DataErrorValidationRule ValidatesOnTargetUpdated="True"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
                 <Button Margin="0,10,0,0" FontSize="17" Foreground="Black" Name="x_calibrating"
                 materialDesign:ButtonProgressAssist.IsIndeterminate="False"
                 materialDesign:ButtonProgressAssist.IsIndicatorVisible="True"
@@ -66,7 +74,15 @@
                 Height="77" Width="170" materialDesign:HintAssist.Hint="Y angle"
                 HorizontalAlignment="Center" HorizontalContentAlignment="Center"
                 VerticalAlignment="Top" Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                FontSize="32" IsEnabled="False" Margin="0,20,0,0" Name="y_textbox" Cursor="Hand"/>
+                FontSize="32" IsEnabled="False" Margin="0,20,0,0" Name="y_textbox" Cursor="Hand">
+                    <TextBox.Text>
+                        <Binding Path="YAngle" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <DataErrorValidationRule ValidatesOnTargetUpdated="True"/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
                 <Button Margin="0,10,0,0" FontSize="17" Foreground="Black" Name="y_calibrating"
                 materialDesign:ButtonProgressAssist.IsIndeterminate="False"
                 materialDesign:ButtonProgressAssist.IsIndicatorVisible="True"

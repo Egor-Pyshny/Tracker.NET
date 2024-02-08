@@ -18,14 +18,16 @@ namespace Tracker.UserControls
     /// <summary>
     /// Логика взаимодействия для MainPageControl.xaml
     /// </summary>
-    public partial class MainPageControl : UserControl
+    public partial class MainPageControl : UserControl, IControl
     {
-        public string name = "Main Page";
+       
 
         public MainPageControl()
         {
             InitializeComponent();
         }
+
+        public string PageName { get { return "Основная страница"; } }
 
         private void play_border_MouseDown(object sender, MouseButtonEventArgs e)
         {

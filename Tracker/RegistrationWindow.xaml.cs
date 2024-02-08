@@ -1,70 +1,31 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Tracker.AppContext;
+using Tracker.Controllers.DataBaseController;
+using Tracker.Controllers.DataBaseController.Models;
 using Tracker.Data;
 
 namespace Tracker
 {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
-    /// </summary>
-
-    public class PersonModel : IDataErrorInfo
-    {
-        public string Name { get; set; }
-        public int Age { get; set; }
-        public string Position { get; set; }
-        public string this[string columnName]
-        {
-            get
-            {
-                string error = String.Empty;
-                switch (columnName)
-                {
-                    case "Age":
-                        if ((Age < 0) || (Age > 100))
-                        {
-                            error = "Возраст должен быть больше 0 и меньше 100";
-                        }
-                        break;
-                    case "Name":
-                        //Обработка ошибок для свойства Name
-                        break;
-                    case "Position":
-                        //Обработка ошибок для свойства Position
-                        break;
-                }
-                return error;
-            }
-        }
-        public string Error
-        {
-            get { throw new NotImplementedException(); }
-        }
-    }
+    /// </summary
 
     public partial class RegistrationWindow : Window
     {
+
         private bool registration = true;
-        private TextBox __name_box, __email_box;
-        private PasswordBox __passw_box, __passw_check_box;
-        private CheckBox __agreement_box;
-        PersonModel Tom;
+        
         public RegistrationWindow()
         {
             InitializeComponent();
             MyWindowController.register(this);
-
-            Tom = new PersonModel();
-            this.DataContext = Tom;
-            __name_box = this.name_field;
-            __email_box = this.email_field;
-            __passw_box = this.password_field;
-            __passw_check_box = this.passw_check_field;
-            __agreement_box = this.agreement;
+            this.DataContext = Context.User;
         }
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
@@ -75,28 +36,120 @@ namespace Tracker
             }
         }
 
+        private bool Validate() {
+            bool res = true;
+            if ((Context.User.DateOfBirth = birth_date.ToString()) == "") {
+                res = false;
+                birth_date.BorderBrush = Brushes.Red;
+            }
+            try
+            {
+                if (!(Regex.IsMatch(Context.User.FirstName, @"^[А-Я]*$")))
+                {
+                    res = false;
+                    first_name.BorderBrush = Brushes.Red;
+                }
+            } catch(ArgumentNullException) {
+                res = false;
+                first_name.BorderBrush = Brushes.Red;
+            }
+
+            try
+            {
+                if (!(Regex.IsMatch(Context.User.SecondName, @"^[А-Я]*$")))
+                {
+                    res = false;
+                    second_name.BorderBrush = Brushes.Red;
+                }
+            }
+            catch (ArgumentNullException)
+            {
+                res = false;
+                second_name.BorderBrush = Brushes.Red;
+            }
+
+            try
+            {
+                if (!(Regex.IsMatch(Context.User.ThirdName, @"^[А-Я]*$")))
+                { 
+                    res = false;
+                    third_name.BorderBrush = Brushes.Red;
+                }
+            }
+            catch (ArgumentNullException)
+            {
+                res = false;
+                third_name.BorderBrush = Brushes.Red;
+            }
+
+            if (registration)
+            {
+                try
+                {
+                    if (!(Regex.IsMatch(Context.User.Description, @"^[А-Я]*$")))
+                    {
+                        res = false;
+                        disease_field.BorderBrush = Brushes.Red;
+                    }
+                }
+                catch (ArgumentNullException)
+                {
+                    res = false;
+                    disease_field.BorderBrush = Brushes.Red;
+                }
+            }
+
+            if (res) {
+                if (registration) {
+                    if (!(MyDBController.RegisterNewUser(Context.User)))
+                    {
+                        res = false;
+                        error_msg.Text = "Пользователь с таким именем уже зарегистрирован";
+                    }
+                } else if (!(MyDBController.CheckUserExists(Context.User)))
+                {
+                    res = false;
+                    error_msg.Text = "Пользователь с таким именем не зарегистрирован";
+                }
+            }
+            return res;
+        }
+
+        private void SwitchToMain() {
+            this.Hide();
+            MyWindowController.main().Show();
+        }
+
         private void SwitchToSignUpForm(object sender, RoutedEventArgs e)
         {
             if (!registration)
             {
+                error_msg.Text = "";
                 registration = true;
-                __name_box.Clear();
-                __passw_check_box.Clear();
-                this.email_field.Clear();
-                this.password_field.Clear();
-                registaration_fields.Children.Insert(0, __name_box);
-                registaration_fields.Children.Insert(3, __passw_check_box);
-                registaration_fields.Children.Insert(4, __agreement_box);
-                this.sign_up_btn.Background = new SolidColorBrush(Color.FromRgb(0x05, 0xB7, 0x90));
-                this.log_in_btn.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-                this.auto_enter.IsChecked = false;
-                this.agreement.IsChecked = false;
+                first_name.Clear();
+                first_name.BorderBrush = new SolidColorBrush(Color.FromRgb(0xC5,0xC8,0xCC));
+                second_name.Clear();
+                second_name.BorderBrush = new SolidColorBrush(Color.FromRgb(0xC5, 0xC8, 0xCC));
+                third_name.Clear();
+                third_name.BorderBrush = new SolidColorBrush(Color.FromRgb(0xC5, 0xC8, 0xCC));
+                birth_date.Visibility = Visibility.Visible;
+                birth_date.BorderBrush = new SolidColorBrush(Color.FromRgb(0xC5, 0xC8, 0xCC));
+                disease_field.Visibility = Visibility.Visible;
+                disease_field.Clear();
+                disease_field.BorderBrush = new SolidColorBrush(Color.FromRgb(0xC5, 0xC8, 0xCC));
+                auto_enter.IsChecked = false;
+                sign_up_btn.Background = new SolidColorBrush(Color.FromRgb(0x05, 0xB7, 0x90));
+                log_in_btn.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+            }
+            else if(Validate())
+            {
+                SwitchToMain();
             }
         }
 
         private void BtnClose_Click(object sender, RoutedEventArgs e)
         {
-            App.Current.Shutdown();
+            MyWindowController.Close(this);
         }
 
         private void BtnClose_MouseEnter(object sender, MouseEventArgs e)
@@ -124,11 +177,6 @@ namespace Tracker
             (sender as Button).Background = null;
         }
 
-        private void Window_Closing(object sender, CancelEventArgs e)
-        {
-            App.Current.Shutdown();
-        }
-
         private void MinimizedIcon_MouseLeave(object sender, MouseEventArgs e)
         {
             (sender as Button).Background = null;
@@ -138,19 +186,33 @@ namespace Tracker
         {
             if (registration)
             {
+                error_msg.Text = "";
                 registration = false;
-                this.name_field.Clear();
-                this.email_field.Clear();
-                this.password_field.Clear();
-                this.passw_check_field.Clear();
-                this.auto_enter.IsChecked = false;
-                this.agreement.IsChecked = false;
-                registaration_fields.Children.Remove(__name_box);
-                registaration_fields.Children.Remove(__passw_check_box);
-                registaration_fields.Children.Remove(__agreement_box);
-                this.sign_up_btn.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-                this.log_in_btn.Background = new SolidColorBrush(Color.FromRgb(0x05, 0xB7, 0x90));
-                this.auto_enter.IsChecked = false;
+                first_name.Clear();
+                first_name.BorderBrush = new SolidColorBrush(Color.FromRgb(0xC5, 0xC8, 0xCC));
+                second_name.Clear();
+                second_name.BorderBrush = new SolidColorBrush(Color.FromRgb(0xC5, 0xC8, 0xCC));
+                third_name.Clear();
+                third_name.BorderBrush = new SolidColorBrush(Color.FromRgb(0xC5, 0xC8, 0xCC));
+                birth_date.Visibility = Visibility.Collapsed;
+                disease_field.Visibility = Visibility.Collapsed;
+                auto_enter.IsChecked = false;
+                sign_up_btn.Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+                log_in_btn.Background = new SolidColorBrush(Color.FromRgb(0x05, 0xB7, 0x90));
+            }
+            else if (Validate())
+            {
+                SwitchToMain();
+            }
+        }
+
+        private void TextChanged(object sender, TextChangedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            if (textBox != null)
+            {
+                textBox.Text = textBox.Text.ToUpper();
+                textBox.CaretIndex = textBox.Text.Length;
             }
         }
     }

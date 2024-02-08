@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         FontSize="18" FontFamily="{DynamicResource MaterialDesignFont}" ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen" WindowStyle="None" AllowsTransparency="True" Background="Transparent" 
-        Height="645" Width="875" Closing="Window_Closing" MouseDown="Window_MouseDown">
+        Height="645" Width="875" MouseDown="Window_MouseDown">
     <Window.Resources>
         <Storyboard x:Key="OpenMenu">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="GridMenu">

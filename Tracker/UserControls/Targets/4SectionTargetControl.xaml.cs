@@ -30,5 +30,10 @@ namespace Tracker.UserControls.Targets
         {
             throw new NotImplementedException();
         }
+
+        public bool ScopeInTarget(int x, int y, float scale)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

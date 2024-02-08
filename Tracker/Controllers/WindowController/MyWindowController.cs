@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Tracker.Controllers.DataBaseController;
 using Tracker.UserControls;
 
 namespace Tracker.Data
@@ -70,6 +71,7 @@ namespace Tracker.Data
                 if (!(sender is GameWindow)) _game.Close();
             }
             Reciver.Stop();
+            MyDBController.Stop();
             App.Current.Shutdown();
         }
     }

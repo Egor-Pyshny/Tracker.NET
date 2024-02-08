@@ -11,11 +11,11 @@ namespace Tracker.UserControls.Scope
     {
         public Image image { private set; get; }
         private BitmapImage _bitmap = new BitmapImage();
-        public int width;
-        public int height;
-        public static double step = 0.01;
+        public int width = 1280;
+        public int height = 720;
+        public double step = 0.01;
         private float fault = 0.15f;
-        public static double x_center = -0.9, y_center = -1.7, max_y = 15.7, max_x = 14.6;
+        public double x_center = -0.9, y_center = -1.7, max_y = 15.7, max_x = 14.6;
 
         public Scope() {
             image = new Image();
@@ -27,6 +27,10 @@ namespace Tracker.UserControls.Scope
             image.VerticalAlignment = VerticalAlignment.Top;
             image.Width = 25;
             image.Height = 25;
+        }
+
+        public Scope(double x_center, double y_center, double max_y, double max_x) { 
+            
         }
 
         public Scope(int x, int y)
@@ -80,6 +84,16 @@ namespace Tracker.UserControls.Scope
                 return new Point(left, top);
             }
             return new Point(double.NaN, double.NaN);
+        }
+
+        public Point MoveProjection(double x, double y) {
+            var new_x = x * width / max_x;
+            var new_y = y * height/ max_y;
+            if (new_x < 0) new_x = 0;
+            if (new_x > width - 25) new_x = width - 25;
+            if (new_y < 0) new_y = 0;
+            if (new_y > height - 25) new_y = height - 25;
+            return new Point(new_x, new_y);
         }
 
         public Point GetCenter() {

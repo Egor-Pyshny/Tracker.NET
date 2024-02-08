@@ -52,5 +52,10 @@ namespace Tracker.UserControls.Targets
             //Console.WriteLine(points[ind]);
             return points[ind];
         }
+
+        public bool ScopeInTarget(int x, int y, float scale)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

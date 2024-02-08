@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using System.Windows.Threading;
 using Tracker;
+using Tracker.AppContext;
 using Tracker.Data;
 using Tracker.UserControls;
 using Tracker.UserControls.Scope;
@@ -37,50 +38,40 @@ namespace Tracker
         private Point3D p;
         Stopwatch stopwatch = new Stopwatch();
         private List<TargetModel> targets_list = new List<TargetModel>();
+        private List<AnimatedTargetControl> anumated_targets_list = new List<AnimatedTargetControl>();
         public GameWindow()
         {
             InitializeComponent();
-            this.Width = 1280;
-            this.Height = 780;
+            this.Width = Context.Game.GameAreaWidth;
+            this.Height = Context.Game.GameAreaHeight + 60;
             Reciver.Start();
             scope = new Scope();
-            scope.width = (int)game_grid.Width;
-            scope.height = (int)game_grid.Height;
-            timer = new Timer(SwitchTarget1,new object(), Timeout.Infinite, Timeout.Infinite);
-            shoot = new Timer(CalculateScore, new object(), 20, 20);
+            //timer = new Timer(SwitchTarget1,new object(), Timeout.Infinite, Timeout.Infinite);
+            //shoot = new Timer(CalculateScore, new object(), 20, 20);
             game_grid.Children.Add(scope.image);
             Grid.SetZIndex(scope.image, 1);
-            GenerateTargets();
+            //GenerateTargets();
             MyWindowController.register(this);
             runnig = true;
             thread = new Thread(ThreadFunc);
-            thread.Start();
+            //thread.Start();
         }
 
         private void ThreadFunc()
         {
             while (runnig) {
                 p = Reciver.p;
-                p.X -= Scope.x_center;
-                p.Y -= Scope.y_center;
-                Point temp = scope.MoveByAngles(p.X, p.Y);
-                if (!double.IsNaN(temp.X))
+                p.X -= scope.x_center;
+                p.Y -= scope.y_center;
+                Point temp = scope.MoveProjection(p.X, p.Y);
+                Dispatcher.Invoke(() =>
                 {
-                    try
-                    {
-                        Dispatcher.Invoke(() =>
-                        {
-                            Thickness currentMargin = scope.image.Margin;
-                            currentMargin.Left += temp.X;
-                            currentMargin.Top += temp.Y;
-                            if (currentMargin.Left < 0) currentMargin.Left = 0;
-                            if (currentMargin.Left > 1280 - 25) currentMargin.Left = 1280 - 25;
-                            if (currentMargin.Top < 0) currentMargin.Top = 0;
-                            if (currentMargin.Top > 720 - 25) currentMargin.Top = 720 - 25;
-                            scope.image.Margin = currentMargin;
-                        });
-                    } catch (TaskCanceledException) { }
-                }
+                    animtarget.Check((int)temp.X + 12, (int)temp.Y + 12, 1);
+                    Thickness currentMargin = scope.image.Margin;
+                    currentMargin.Left = temp.X;
+                    currentMargin.Top = temp.Y;
+                    scope.image.Margin = currentMargin;
+                });
             }
         }
 
@@ -118,7 +109,7 @@ namespace Tracker
 
         private void BtnClose_Click(object sender, RoutedEventArgs e)
         {
-            App.Current.Shutdown();
+            MyWindowController.Close(this);
         }
 
         private void BtnClose_MouseEnter(object sender, MouseEventArgs e)
@@ -214,21 +205,16 @@ namespace Tracker
                 targets_list.Add(newtarget);
             }
             PlaceTargetsRandom();
-            timer.Change(0, System.Threading.Timeout.Infinite);
-            /*timer.Interval = new TimeSpan(0, 0, 0);
-            timer.Tick += SwitchTarget;
-            stopwatch.Start();
-            timer.Start();*/
+            timer.Change(0, Timeout.Infinite);
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             scope.MoveByKeys(e);
-        }
-
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            MyWindowController.Close(this);
+            Dispatcher.Invoke(() =>
+            {
+                animtarget.Check((int)scope.image.Margin.Left + 12, (int)scope.image.Margin.Top + 12, 1);
+            });
         }
 
         public void OnGameStart()

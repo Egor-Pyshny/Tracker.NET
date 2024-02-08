@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
              xmlns:local="clr-namespace:Tracker.UserControls"
-             mc:Ignorable="d" Name="Main_Page"
+             mc:Ignorable="d" Name="Main_Page" 
              d:DesignHeight="585" d:DesignWidth="815">
     <UserControl.Resources>
         <Storyboard x:Key="OnMouseEnterAnimation">

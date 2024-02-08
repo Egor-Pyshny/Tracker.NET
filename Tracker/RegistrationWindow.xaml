@@ -6,22 +6,11 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         FontSize="18" FontFamily="{DynamicResource MaterialDesignFont}" ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen" WindowStyle="None" AllowsTransparency="True" Background="Transparent" 
-        mc:Ignorable="d" Height="645" Width="875" Closing="Window_Closing">
-    <Window.Resources>
-        <ControlTemplate x:Key="validationFailed">
-            <StackPanel Orientation="Horizontal">
-                <Border BorderBrush="Violet" BorderThickness="2">
-                    <AdornedElementPlaceholder />
-                </Border>
-                <TextBlock Foreground="Red" FontSize="26" FontWeight="Bold">!</TextBlock>
-            </StackPanel>
-        </ControlTemplate>
-    </Window.Resources>
+        mc:Ignorable="d" Height="645" Width="875">
     <Grid Margin="20">
         <Grid.Effect>
             <DropShadowEffect BlurRadius="30" ShadowDepth="1" Opacity="0.4"/>
         </Grid.Effect>
-
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="1.22*"/>
@@ -115,45 +104,100 @@
                 <!--Inputs-->
                 <StackPanel VerticalAlignment="Center" Margin="75 0">
                     <StackPanel x:Name="registaration_fields">
-                        <TextBox x:Name="name_field" 
+                        <TextBox x:Name="second_name" 
                                  BorderThickness="0 0 0 1.5" 
-                                 BorderBrush="#FF0000"
+                                 BorderBrush="#C5C8CC" 
                                  materialDesign:HintAssist.FloatingOffset="0,-20" 
-                                 materialDesign:HintAssist.Hint="ФИО"
-                                 materialDesign:HintAssist.HelperText="Helper text longer than error"
-                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                                 Validation.ErrorTemplate="{StaticResource validationFailed}">
+                                 materialDesign:HintAssist.Hint="Фамилия"
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
+                                 TextChanged="TextChanged">
                             <TextBox.Text>
-                                <Binding Path="Age" UpdateSourceTrigger="PropertyChanged">
+                                <Binding Path="SecondName" UpdateSourceTrigger="PropertyChanged">
                                     <Binding.ValidationRules>
                                         <DataErrorValidationRule ValidatesOnTargetUpdated="True"/>
                                     </Binding.ValidationRules>
                                 </Binding>
                             </TextBox.Text>
                         </TextBox>
-                        <TextBox x:Name="email_field" BorderThickness="0 0 0 1.5" BorderBrush="#C5C8CC" materialDesign:HintAssist.FloatingOffset="0,-20" materialDesign:HintAssist.Hint="Почта" Margin="0 12 0 12" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                        <PasswordBox x:Name="password_field" BorderThickness="0 0 0 1.5" BorderBrush="#C5C8CC" materialDesign:HintAssist.FloatingOffset="0,-18" materialDesign:HintAssist.Hint="Пароль" materialDesign:TextFieldAssist.HasClearButton="True" Style="{StaticResource MaterialDesignFloatingHintRevealPasswordBox}" />
-                        <PasswordBox x:Name="passw_check_field" BorderThickness="0 0 0 1.5" BorderBrush="#C5C8CC" materialDesign:HintAssist.FloatingOffset="0,-18" materialDesign:HintAssist.Hint="Повторите пароль" materialDesign:TextFieldAssist.HasClearButton="True" Margin="0 12 0 0" Style="{StaticResource MaterialDesignFloatingHintRevealPasswordBox}" />
-                        <CheckBox x:Name="agreement" Margin="0 20 0 0" FontSize="13">
+                        <TextBox x:Name="first_name" BorderThickness="0 0 0 1.5" 
+                                 BorderBrush="#C5C8CC" 
+                                 materialDesign:HintAssist.FloatingOffset="0,-20" 
+                                 materialDesign:HintAssist.Hint="Имя" 
+                                 Margin="0 12 0 12" TextChanged="TextChanged"
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}">
+                            <TextBox.Text>
+                                <Binding Path="FirstName" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <DataErrorValidationRule ValidatesOnTargetUpdated="True"/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                        <TextBox x:Name="third_name" BorderThickness="0 0 0 1.5" 
+                                 BorderBrush="#C5C8CC" 
+                                 materialDesign:HintAssist.FloatingOffset="0,-20" 
+                                 materialDesign:HintAssist.Hint="Отчество"
+                                 Margin="0 0 0 12" TextChanged="TextChanged"
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}" >
+                            <TextBox.Text>
+                                <Binding Path="ThirdName" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <DataErrorValidationRule ValidatesOnTargetUpdated="True"/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                        <TextBox x:Name="disease_field" BorderThickness="0 0 0 1.5" 
+                                 BorderBrush="#C5C8CC"
+                                 materialDesign:HintAssist.FloatingOffset="0,-20" 
+                                 materialDesign:HintAssist.Hint="Диагноз" 
+                                 Margin="0 0 0 12" TextChanged="TextChanged"
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}" >
+                            <TextBox.Text>
+                                <Binding Path="Description" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <DataErrorValidationRule ValidatesOnTargetUpdated="True"/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                        <DatePicker Name="birth_date" Margin="0 0 0 0" 
+                                    Style="{StaticResource MaterialDesignOutlinedDatePicker}"
+                                    materialDesign:HintAssist.FloatingOffset="0,-20" 
+                                    materialDesign:HintAssist.Hint="Дата рождения"/>
+                        <!--<CheckBox x:Name="agreement" Margin="0 20 0 0" FontSize="13">
                             <TextBlock >
                                 <Run Foreground="#b6b6b6">By signing up I agree with</Run>
                                 <Run Foreground="#07BF96">terms and conditions</Run>
                             </TextBlock>
-                        </CheckBox>
+                        </CheckBox>-->
                     </StackPanel>
                     <StackPanel>
-                        <CheckBox x:Name="auto_enter" Margin="0 5 0 20" FontSize="13">
+                        <CheckBox x:Name="auto_enter" Margin="0 10 0 30" FontSize="13">
                             <TextBlock >
-                                <Run Foreground="#b6b6b6">Remember me</Run>
+                                <Run Foreground="#b6b6b6">Запомнить меня</Run>
                             </TextBlock>
                         </CheckBox>
 
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                            <Button x:Name="sign_up_btn" Content="Sign up" Background="#05B790" Margin="0 0 10 0" FontSize="18" materialDesign:ButtonAssist.CornerRadius="22" Height="45" Width="120" Click="SwitchToSignUpForm"/>
-                            <Button x:Name="log_in_btn" Content="Login" Background="#ffffff" materialDesign:ButtonAssist.CornerRadius="22" FontSize="18" Height="45" Width="120" Margin="10 0 0 0" Click="SwitchToLogInForm" />
+                            <Button x:Name="sign_up_btn" Content="Зарегистрироваться" 
+                                    Background="#05B790"
+                                    FontSize="18" materialDesign:ButtonAssist.CornerRadius="22"
+                                    Height="45" Width="250" Click="SwitchToSignUpForm"/>
+                        </StackPanel>
+                        <StackPanel Margin="0 10 0 0" Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Button x:Name="log_in_btn" Content="Войти в аккаунт" 
+                                    Background="#ffffff" materialDesign:ButtonAssist.CornerRadius="22" 
+                                    FontSize="18" Height="45" Width="250" 
+                                    Click="SwitchToLogInForm" />
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>
+
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="22" 
+                           Foreground="Red" TextAlignment="Center" Width="400" Height="60" 
+                           Margin="0 0 0 10" Name="error_msg" TextWrapping="Wrap"
+                           Text=""/>
             </Grid>
         </Border>
 

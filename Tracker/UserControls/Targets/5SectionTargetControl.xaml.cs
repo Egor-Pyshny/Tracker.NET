@@ -9,6 +9,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -68,19 +69,40 @@ namespace Tracker.UserControls.Targets
             }
         }
 
-        private void UserControl_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            this.Name = "Control";
-        }
-
-        private void UserControl_LostFocus(object sender, RoutedEventArgs e)
-        {
-            this.Name = "Control1";
-        }
-
         public int GetPoints(int x, int y, float scale)
         {
             throw new NotImplementedException();
+        }
+
+        public bool ScopeInTarget(int x, int y, float scale)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void UserControl_MouseEnter(object sender, MouseEventArgs e)
+        {
+            
+
+        }
+
+        private void UserControl_MouseLeave(object sender, MouseEventArgs e)
+        {
+            ((UserControl)sender).BeginAnimation(SolidColorBrush.ColorProperty, null);
+        }
+
+        private void el1_MouseEnter(object sender, MouseEventArgs e)
+        {
+            ColorAnimation animation = new ColorAnimation();
+            animation.From = ((SolidColorBrush)((Ellipse)sender).Fill).Color;
+            animation.To = Colors.LightBlue;
+            animation.Duration = TimeSpan.FromSeconds(0.3);
+
+            ((Ellipse)sender).BeginAnimation(SolidColorBrush.ColorProperty, animation);
+        }
+
+        private void el1_MouseLeave(object sender, MouseEventArgs e)
+        {
+            ((Ellipse)sender).BeginAnimation(SolidColorBrush.ColorProperty, null);
         }
     }
 }

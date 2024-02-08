@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Tracker.AppContext;
 using Tracker.Data;
 using Tracker.UserControls.Scope;
 
@@ -23,8 +24,9 @@ namespace Tracker.UserControls
     /// <summary>
     /// Логика взаимодействия для SettingsWindowControl.xaml
     /// </summary>
-    public partial class SettingsWindowControl : UserControl
+    public partial class SettingsWindowControl : UserControl, IControl
     {
+        public string PageName { get { return "Основная страница"; } }
         private bool calibrating_x = false;
         private bool calibrating_y = false;
         private bool calibrating_center = false;
@@ -48,27 +50,19 @@ namespace Tracker.UserControls
                 p = Reciver.p;
                 if (center_calibrated)
                 {
-                    p.X -= Scope.Scope.x_center;
-                    p.Y -= Scope.Scope.y_center;
+                    p.X -= Context.Game.XCenterAngle;
+                    p.Y -= Context.Game.YCenterAngle;
                 }
                 if (calibrating_x) {
-                    Scope.Scope.max_x = p.X;
-                    Dispatcher.Invoke(() =>
-                    {
-                        x_textbox.Text = p.X.ToString("F5");
-                    });
+                    Context.Game.XAngle = p.X;
                 }
                 if (calibrating_y)
                 {
-                    Scope.Scope.max_y = p.Y;
-                    Dispatcher.Invoke(() =>
-                    {
-                        y_textbox.Text = p.Y.ToString("F5");
-                    });
+                    Context.Game.YAngle = p.Y;
                 }
                 if (calibrating_center) {
-                    Scope.Scope.x_center = p.X;
-                    Scope.Scope.y_center = p.Y;
+                    Context.Game.XCenterAngle = p.X;
+                    Context.Game.YCenterAngle = p.Y;
                 }
             }
         }
@@ -93,7 +87,6 @@ namespace Tracker.UserControls
             }
             else
             {
-                Console.WriteLine("max_x = " + Scope.Scope.max_x.ToString());
                 calibrating_x = false;
                 (sender as Button).SetValue(ButtonProgressAssist.IsIndeterminateProperty, false);
                 (sender as Button).Content = "Start calibrating X";
@@ -111,8 +104,6 @@ namespace Tracker.UserControls
             }
             else
             {
-                Console.WriteLine("x = "+Scope.Scope.x_center.ToString());
-                Console.WriteLine("y = "+Scope.Scope.y_center.ToString());
                 calibrating_center = true;
                 calibrating_center = false;
                 (sender as Button).SetValue(ButtonProgressAssist.IsIndeterminateProperty, false);
@@ -130,7 +121,6 @@ namespace Tracker.UserControls
             }
             else
             {
-                Console.WriteLine("max_y = " + Scope.Scope.max_y.ToString());
                 calibrating_y = false;
                 (sender as Button).SetValue(ButtonProgressAssist.IsIndeterminateProperty, false);
                 (sender as Button).Content = "Start calibrating Y";

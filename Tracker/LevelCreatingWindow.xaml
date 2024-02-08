@@ -87,7 +87,7 @@
                 </Grid>
             </Grid>
             <Grid Background="#ffffff" Grid.Column="1" Name="content_grid">
-                <controls:_3SectionTargetControl Margin="422,170,708,400" Width="150" Height="150"></controls:_3SectionTargetControl>
+
             </Grid>
         </Grid>
     </Grid>

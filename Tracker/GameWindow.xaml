@@ -4,9 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:controls ="clr-namespace:Tracker.UserControls.Targets"
         mc:Ignorable="d"
         FontSize="18" FontFamily="{DynamicResource MaterialDesignFont}" ResizeMode="NoResize"
-        WindowStartupLocation="CenterScreen" WindowStyle="None" AllowsTransparency="True" Background="Transparent" MouseMove="Window_MouseMove" KeyDown="Window_KeyDown" Closing="Window_Closing" >
+        WindowStartupLocation="CenterScreen" WindowStyle="None" AllowsTransparency="True" Background="Transparent" MouseMove="Window_MouseMove" KeyDown="Window_KeyDown">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="60"/>
@@ -59,6 +60,8 @@
                 </StackPanel>
             </Grid>
         </Grid>
-        <Grid x:Name="game_grid" Background="White" Grid.Row="1" Width="1280" Height="720"/>
+        <Grid x:Name="game_grid" Background="White" Grid.Row="1" Width="1280" Height="720">
+            <controls:AnimatedTargetControl x:Name="animtarget" Margin="24,23,1006,447"/>
+        </Grid>
     </Grid>
 </Window>

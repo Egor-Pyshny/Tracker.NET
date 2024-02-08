@@ -14,6 +14,7 @@ namespace Tracker.UserControls.Targets
     public interface ITarget
     {
         int GetPoints(int x, int y, float scale);
+        bool ScopeInTarget(int x, int y, float scale);
         Mode mode { get; set; }
     }
 }
