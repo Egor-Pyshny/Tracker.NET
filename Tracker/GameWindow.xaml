@@ -61,7 +61,12 @@
             </Grid>
         </Grid>
         <Grid x:Name="game_grid" Background="White" Grid.Row="1" Width="1280" Height="720">
-            <controls:AnimatedTargetControl x:Name="animtarget" Margin="24,23,1006,447"/>
+            <controls:AnimatedTargetControl x:Name="a1" Margin="10,10,1020,460"/>
+            <controls:AnimatedTargetControl x:Name="a2" Margin="1120,285,10,285"/>
+            <controls:AnimatedTargetControl x:Name="a3" Margin="1120,560,10,10"/>
+            <controls:AnimatedTargetControl x:Name="a4" Margin="1120,10,10,560"/>
+            <controls:AnimatedTargetControl x:Name="a5" Margin="10,560,1120,10"/>
+            <controls:AnimatedTargetControl x:Name="a6" Margin="10,285,1120,285"/>
         </Grid>
     </Grid>
 </Window>

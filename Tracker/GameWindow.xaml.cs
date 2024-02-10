@@ -27,6 +27,7 @@ namespace Tracker
         private int targets_amount = 5;
         private int minttl = 1;
         private int maxttl = 1;
+        private int ind = 0;
         private double scale = 1;
         private bool runnig = false;
         private Thread thread;
@@ -38,20 +39,24 @@ namespace Tracker
         private Point3D p;
         Stopwatch stopwatch = new Stopwatch();
         private List<TargetModel> targets_list = new List<TargetModel>();
-        private List<AnimatedTargetControl> anumated_targets_list = new List<AnimatedTargetControl>();
+        private AnimatedTargetControl currentTarget;
+        private List<AnimatedTargetControl> animated_targets_list = new List<AnimatedTargetControl>();
         public GameWindow()
         {
             InitializeComponent();
-            this.Width = Context.Game.GameAreaWidth;
-            this.Height = Context.Game.GameAreaHeight + 60;
             Reciver.Start();
-            scope = new Scope();
             //timer = new Timer(SwitchTarget1,new object(), Timeout.Infinite, Timeout.Infinite);
             //shoot = new Timer(CalculateScore, new object(), 20, 20);
             game_grid.Children.Add(scope.image);
             Grid.SetZIndex(scope.image, 1);
             //GenerateTargets();
             MyWindowController.register(this);
+            animated_targets_list.Add(a1);
+            animated_targets_list.Add(a2);
+            animated_targets_list.Add(a3);
+            animated_targets_list.Add(a4);
+            animated_targets_list.Add(a5);
+            animated_targets_list.Add(a6);
             runnig = true;
             thread = new Thread(ThreadFunc);
             //thread.Start();
@@ -64,20 +69,55 @@ namespace Tracker
                 p.X -= scope.x_center;
                 p.Y -= scope.y_center;
                 Point temp = scope.MoveProjection(p.X, p.Y);
+                if (ind != 1) currentTarget.statistic.way.Add(temp);
+                bool completed = false;
                 Dispatcher.Invoke(() =>
                 {
-                    animtarget.Check((int)temp.X + 12, (int)temp.Y + 12, 1);
+                    completed = currentTarget.Check((int)temp.X + 12, (int)temp.Y + 12, 1);
                     Thickness currentMargin = scope.image.Margin;
                     currentMargin.Left = temp.X;
                     currentMargin.Top = temp.Y;
                     scope.image.Margin = currentMargin;
                 });
+                if (completed) SwitchTarget();
             }
+        }
+
+        private void SwitchTarget() {
+            if (ind < animated_targets_list.Count)
+            {
+                currentTarget.statistic.endTime = DateTime.Now;
+                currentTarget = animated_targets_list[ind];
+                currentTarget.statistic.startTime = DateTime.Now;
+                ind++;
+            }
+            else { 
+                isgame = false;
+            }
+        }
+
+        public void Start() {
+            currentTarget = animated_targets_list[ind];
+            currentTarget.statistic.startTime = DateTime.Now;
+            ind++;
+            scope = new Scope(
+                Context.Game.XCenterAngle,
+                Context.Game.YCenterAngle,
+                Context.Game.XAngle,
+                Context.Game.YAngle,
+                Context.Game.GameAreaWidth,
+                Context.Game.GameAreaHeight
+                );
+            this.Width = Context.Game.GameAreaWidth;
+            this.Height = Context.Game.GameAreaHeight + 60;
+            runnig = true;
+            thread = new Thread(ThreadFunc);
+            //thread.Start();
         }
 
         public void Stop() {
             runnig = false;
-            thread.Abort();
+            thread.Join();
         }
 
         private void Window_MouseMove(object sender, MouseEventArgs e)
@@ -109,6 +149,9 @@ namespace Tracker
 
         private void BtnClose_Click(object sender, RoutedEventArgs e)
         {
+            Stop();
+            this.Hide();
+            MyWindowController.main().Show();
             MyWindowController.Close(this);
         }
 
@@ -213,7 +256,7 @@ namespace Tracker
             scope.MoveByKeys(e);
             Dispatcher.Invoke(() =>
             {
-                animtarget.Check((int)scope.image.Margin.Left + 12, (int)scope.image.Margin.Top + 12, 1);
+                currentTarget.Check((int)scope.image.Margin.Left + 12, (int)scope.image.Margin.Top + 12, 1);
             });
         }
 

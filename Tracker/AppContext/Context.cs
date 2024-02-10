@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Tracker.Controllers.DataBaseController.Models;
+using Tracker.UserControls.Scope;
 
 namespace Tracker.AppContext
 {
@@ -32,5 +33,6 @@ namespace Tracker.AppContext
 
         public static UserModel User = new UserModel();
         public static GameContext Game = new GameContext();
+        public static Scope scope;
     }
 }

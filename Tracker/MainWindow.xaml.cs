@@ -106,6 +106,7 @@ namespace Tracker
             //Scope.step = (int)(controls["ItemSettings"] as MainPageControl).sens_slider.Value;
             Context.Game.GameAreaHeight = 720;
             Context.Game.GameAreaWidth = 1280;
+            MyWindowController.game().Start();
             MyWindowController.game().Show();
         }
 

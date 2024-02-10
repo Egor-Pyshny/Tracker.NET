@@ -29,8 +29,13 @@ namespace Tracker.UserControls.Scope
             image.Height = 25;
         }
 
-        public Scope(double x_center, double y_center, double max_y, double max_x) { 
-            
+        public Scope(double x_center, double y_center, double max_y, double max_x, int width, int height) { 
+            this.x_center = x_center;
+            this.y_center = y_center;
+            this.max_y = max_y;
+            this.max_x = max_x;
+            this.width = width;
+            this.height = height;
         }
 
         public Scope(int x, int y)

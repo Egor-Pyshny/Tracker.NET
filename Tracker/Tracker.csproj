@@ -133,6 +133,7 @@
     </Compile>
     <Compile Include="UserControls\Targets\ITarget.cs" />
     <Compile Include="UserControls\Targets\TargetModel.cs" />
+    <Compile Include="UserControls\Targets\TargetStatistic.cs" />
     <Page Include="GameWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

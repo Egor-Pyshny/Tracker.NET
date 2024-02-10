@@ -22,22 +22,23 @@ namespace Tracker.UserControls.Targets
     public partial class AnimatedTargetControl : UserControl, ITarget
     {
         public Mode mode { get; set; }
+        public TargetStatistic statistic = new TargetStatistic();
         private bool animating = false;
         private bool completed = false;
         private SolidColorBrush colorBrush = new SolidColorBrush();
         private BackEase backEase = new BackEase() { 
-            Amplitude = 0.1,
+            Amplitude = 0.01,
             EasingMode = EasingMode.EaseOut,
         };
 
         public AnimatedTargetControl()
         {
             InitializeComponent();
-            colorBrush.Color = Color.FromArgb(0xFF, 0x80, 0x80, 0x80);
+            colorBrush.Color = Color.FromArgb(0xFF, 0x00, 0x00, 0x00);
         }
 
         public bool ScopeInTarget(int x, int y, float scale) {
-            Point center = new Point(this.Margin.Left + 250 / 2, this.Margin.Top + 250 / 2);
+            Point center = new Point(this.Margin.Left + target.Width / 2, this.Margin.Top + target.Height / 2);
             int rad = (int)Math.Round(125 * scale);
             int deltaX = (int)(center.X - x);
             int deltaY = (int)(center.Y - y);
@@ -45,7 +46,7 @@ namespace Tracker.UserControls.Targets
             return diatance<rad;
         }
 
-        public void Check(int x, int y, float scale) {
+        public bool Check(int x, int y, float scale) {
             if (!completed)
             {
                 if (ScopeInTarget(x, y, scale))
@@ -65,6 +66,7 @@ namespace Tracker.UserControls.Targets
                     }
                 }
             }
+            return completed;
         }
 
         private void OnComplete(object sender, EventArgs e) { 
