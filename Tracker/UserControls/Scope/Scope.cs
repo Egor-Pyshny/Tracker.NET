@@ -18,6 +18,20 @@ namespace Tracker.UserControls.Scope
         public double x_center = -0.9, y_center = -1.7, max_y = 15.7, max_x = 14.6;
 
         public Scope() {
+            init_image();
+        }
+
+        public Scope(double x_center, double y_center, double max_y, double max_x, int width, int height) {
+            this.x_center = x_center;
+            this.y_center = y_center;
+            this.max_y = max_y;
+            this.max_x = max_x;
+            this.width = width;
+            this.height = height;
+            init_image();
+        }
+
+        private void init_image() {
             image = new Image();
             _bitmap.BeginInit();
             _bitmap.UriSource = new Uri("scope.png", UriKind.RelativeOrAbsolute);
@@ -27,15 +41,6 @@ namespace Tracker.UserControls.Scope
             image.VerticalAlignment = VerticalAlignment.Top;
             image.Width = 25;
             image.Height = 25;
-        }
-
-        public Scope(double x_center, double y_center, double max_y, double max_x, int width, int height) { 
-            this.x_center = x_center;
-            this.y_center = y_center;
-            this.max_y = max_y;
-            this.max_x = max_x;
-            this.width = width;
-            this.height = height;
         }
 
         public Scope(int x, int y)
@@ -51,7 +56,7 @@ namespace Tracker.UserControls.Scope
 
         public void MoveByKeys(KeyEventArgs e) {
             Thickness currentMargin = image.Margin;
-            int step = 5;
+            int step = 50;
             switch (e.Key)
             {
                 case Key.Left:

@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
+using System.Windows.Shapes;
 using System.Windows.Threading;
 using Tracker;
 using Tracker.AppContext;
@@ -15,10 +18,26 @@ using Tracker.Data;
 using Tracker.UserControls;
 using Tracker.UserControls.Scope;
 using Tracker.UserControls.Targets;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Tracker
 {
+
+    public class TimeOnlyConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is DateTime dateTime)
+            {
+                return dateTime.ToString("HH:mm:ss");
+            }
+            return null;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
@@ -28,11 +47,12 @@ namespace Tracker
         private int minttl = 1;
         private int maxttl = 1;
         private int ind = 0;
+        private int stat_ind = 0;
         private double scale = 1;
         private bool runnig = false;
         private Thread thread;
         private Scope scope;
-        private Timer timer, shoot;
+        private Timer timer, path_logger;
         private UserControl target;
         private bool isgame = true;
         private int current = 0;
@@ -41,25 +61,18 @@ namespace Tracker
         private List<TargetModel> targets_list = new List<TargetModel>();
         private AnimatedTargetControl currentTarget;
         private List<AnimatedTargetControl> animated_targets_list = new List<AnimatedTargetControl>();
+        private TargetStatistic stat = new TargetStatistic();
+
         public GameWindow()
         {
             InitializeComponent();
             Reciver.Start();
-            //timer = new Timer(SwitchTarget1,new object(), Timeout.Infinite, Timeout.Infinite);
-            //shoot = new Timer(CalculateScore, new object(), 20, 20);
-            game_grid.Children.Add(scope.image);
-            Grid.SetZIndex(scope.image, 1);
-            //GenerateTargets();
-            MyWindowController.register(this);
-            animated_targets_list.Add(a1);
-            animated_targets_list.Add(a2);
-            animated_targets_list.Add(a3);
-            animated_targets_list.Add(a4);
-            animated_targets_list.Add(a5);
-            animated_targets_list.Add(a6);
+
+            Start();
+            this.DataContext = stat;
+            path_logger = new Timer(log_path, null, 0, 16);
+            MyWindowController.register(this);          
             runnig = true;
-            thread = new Thread(ThreadFunc);
-            //thread.Start();
         }
 
         private void ThreadFunc()
@@ -68,38 +81,80 @@ namespace Tracker
                 p = Reciver.p;
                 p.X -= scope.x_center;
                 p.Y -= scope.y_center;
-                Point temp = scope.MoveProjection(p.X, p.Y);
-                if (ind != 1) currentTarget.statistic.way.Add(temp);
+                Point temp = scope.MoveProjection(p.X, p.Y);            
                 bool completed = false;
                 Dispatcher.Invoke(() =>
                 {
-                    completed = currentTarget.Check((int)temp.X + 12, (int)temp.Y + 12, 1);
+                    var t = scope.image.Margin;
+                    completed = currentTarget.Check((int)t.Left + 12, (int)t.Top + 12, 1);
+                    if(completed) currentTarget.statistic.last_hit = new Point((int)t.Left + 12, (int)t.Top + 12);
                     Thickness currentMargin = scope.image.Margin;
                     currentMargin.Left = temp.X;
                     currentMargin.Top = temp.Y;
-                    scope.image.Margin = currentMargin;
+                    //scope.image.Margin = currentMargin;
                 });
-                if (completed) SwitchTarget();
+                if (completed)
+                {
+                    SwitchTarget();
+                }
             }
         }
 
-        private void SwitchTarget() {
-            if (ind < animated_targets_list.Count)
+        private void log_path(object state)
+        {
+            if (ind != 1 && isgame)
             {
-                currentTarget.statistic.endTime = DateTime.Now;
-                currentTarget = animated_targets_list[ind];
-                currentTarget.statistic.startTime = DateTime.Now;
-                ind++;
+                Dispatcher.Invoke(() =>
+                {
+                    var t = scope.image.Margin;
+                    currentTarget.statistic.way.Add(new Point(t.Left+12, t.Top+12));
+                });
             }
-            else { 
-                isgame = false;
+        } 
+
+        private void SwitchTarget() {
+            if (isgame)
+            {
+                if (ind < animated_targets_list.Count)
+                {
+                    currentTarget.statistic.index = ind;
+                    currentTarget.statistic.set_line_color();
+                    currentTarget.statistic.endTime = DateTime.Now;
+                    currentTarget = animated_targets_list[ind];
+                    Dispatcher.Invoke(() =>
+                    {
+                        currentTarget.Visibility = Visibility.Visible;
+                    });
+                    currentTarget.statistic.startTime = DateTime.Now;
+                    ind++;
+                }
+                else
+                {
+                    currentTarget.statistic.set_line_color();
+                    isgame = false;
+                    Dispatcher.Invoke(() =>
+                    {
+                        ButtonOpenMenu.IsEnabled = true;
+                        DrawPathes();
+                    });
+                    path_logger.Dispose();
+                }
+            }
+        }
+
+        private void DrawPathes() {
+            foreach (AnimatedTargetControl target in animated_targets_list) {
+                var myPolyline = new Polyline();
+                myPolyline.Stroke = new SolidColorBrush(target.statistic.lineColor);
+                myPolyline.StrokeThickness = 2;
+                myPolyline.FillRule = FillRule.EvenOdd;
+                myPolyline.Points = target.statistic.way;
+                game_grid.Children.Add(myPolyline);
             }
         }
 
         public void Start() {
-            currentTarget = animated_targets_list[ind];
-            currentTarget.statistic.startTime = DateTime.Now;
-            ind++;
+            ButtonOpenMenu.IsEnabled = false;
             scope = new Scope(
                 Context.Game.XCenterAngle,
                 Context.Game.YCenterAngle,
@@ -108,16 +163,32 @@ namespace Tracker
                 Context.Game.GameAreaWidth,
                 Context.Game.GameAreaHeight
                 );
+            game_grid.Children.Add(scope.image);
+            Grid.SetZIndex(scope.image, 1);
+            animated_targets_list.Add(a1);
+            //animated_targets_list.Add(a2);
+            //animated_targets_list.Add(a3);
+            //animated_targets_list.Add(a4);
+            a5.Visibility = Visibility.Hidden;
+            a6.Visibility = Visibility.Hidden;
+            animated_targets_list.Add(a5);
+            animated_targets_list.Add(a6);
+            currentTarget = animated_targets_list[ind];
+            currentTarget.statistic.index = ind;
+            ind++;
+            currentTarget.statistic.startTime = DateTime.Now;
             this.Width = Context.Game.GameAreaWidth;
             this.Height = Context.Game.GameAreaHeight + 60;
             runnig = true;
             thread = new Thread(ThreadFunc);
-            //thread.Start();
+            thread.Start();
         }
 
         public void Stop() {
             runnig = false;
-            thread.Join();
+            path_logger.Dispose();
+            //timer.Dispose();
+            thread.Abort();
         }
 
         private void Window_MouseMove(object sender, MouseEventArgs e)
@@ -152,7 +223,7 @@ namespace Tracker
             Stop();
             this.Hide();
             MyWindowController.main().Show();
-            MyWindowController.Close(this);
+            //MyWindowController.Close(this);
         }
 
         private void BtnClose_MouseEnter(object sender, MouseEventArgs e)
@@ -254,10 +325,34 @@ namespace Tracker
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             scope.MoveByKeys(e);
-            Dispatcher.Invoke(() =>
+            /*Dispatcher.Invoke(() =>
             {
-                currentTarget.Check((int)scope.image.Margin.Left + 12, (int)scope.image.Margin.Top + 12, 1);
-            });
+               // currentTarget.Check((int)scope.image.Margin.Left + 12, (int)scope.image.Margin.Top + 12, 1);
+            });*/
+        }
+
+        private void ButtonPrevTarget_Click(object sender, RoutedEventArgs e)
+        {
+            stat_ind--;
+            ButtonNextTarget.IsEnabled = true;
+            this.DataContext = animated_targets_list[stat_ind].statistic;
+            target_line_color.Fill = new SolidColorBrush(animated_targets_list[stat_ind].statistic.lineColor);
+            if (stat_ind == 0)
+            {
+                (sender as Button).IsEnabled = false;
+            }
+        }
+
+        private void ButtonNextTarget_Click(object sender, RoutedEventArgs e)
+        {
+            stat_ind++;
+            ButtonPrevTarget.IsEnabled = true;
+            this.DataContext = animated_targets_list[stat_ind].statistic;
+            target_line_color.Fill = new SolidColorBrush(animated_targets_list[stat_ind].statistic.lineColor);
+            Console.WriteLine(stat.ToString());
+            if (stat_ind == animated_targets_list.Count - 1) { 
+                (sender as Button).IsEnabled = false;
+            }
         }
 
         public void OnGameStart()

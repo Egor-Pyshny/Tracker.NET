@@ -6,6 +6,6 @@
              xmlns:local="clr-namespace:Tracker.UserControls.Targets"
              mc:Ignorable="d" VerticalAlignment="Top" HorizontalAlignment="Left">
     <Grid>
-        <Ellipse Name="target" Width="150" Height="150" Fill="Black"/>
+        <Ellipse Name="target" Width="150" Height="150" Fill="#555555"/>
     </Grid>
 </UserControl>

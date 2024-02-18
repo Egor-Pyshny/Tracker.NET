@@ -25,10 +25,15 @@ namespace Tracker.UserControls.Targets
         public TargetStatistic statistic = new TargetStatistic();
         private bool animating = false;
         private bool completed = false;
+        private bool hited = false;
         private SolidColorBrush colorBrush = new SolidColorBrush();
-        private BackEase backEase = new BackEase() { 
+        private static BackEase backEase = new BackEase() { 
             Amplitude = 0.01,
             EasingMode = EasingMode.EaseOut,
+        };
+        private ColorAnimation colorAnimation = new ColorAnimation(Color.FromRgb(0, 255, 0), TimeSpan.FromSeconds(1))
+        {
+            EasingFunction = backEase
         };
 
         public AnimatedTargetControl()
@@ -39,7 +44,7 @@ namespace Tracker.UserControls.Targets
 
         public bool ScopeInTarget(int x, int y, float scale) {
             Point center = new Point(this.Margin.Left + target.Width / 2, this.Margin.Top + target.Height / 2);
-            int rad = (int)Math.Round(125 * scale);
+            int rad = (int)Math.Round(75 * scale);
             int deltaX = (int)(center.X - x);
             int deltaY = (int)(center.Y - y);
             double diatance = Math.Sqrt(deltaX * deltaX + deltaY * deltaY);            
@@ -53,6 +58,10 @@ namespace Tracker.UserControls.Targets
                 {
                     if (!animating)
                     {
+                        if (!hited) {
+                            statistic.first_hit = new Point(x, y);
+                            statistic.first_hit_time = DateTime.Now;
+                        }
                         animating = true;
                         StartAnimation();
                     }
@@ -69,7 +78,7 @@ namespace Tracker.UserControls.Targets
             return completed;
         }
 
-        private void OnComplete(object sender, EventArgs e) { 
+        private void OnComplete(object sender, EventArgs e) {
             target.Opacity = 0.2;
             completed = true;
         }
@@ -77,16 +86,13 @@ namespace Tracker.UserControls.Targets
         private void StopAnimation()
         {
             target.Fill = Brushes.Gray;
+            colorAnimation.Completed -= OnComplete;
             colorBrush.BeginAnimation(SolidColorBrush.ColorProperty, null);
         }
 
         private void StartAnimation()
         {
             target.Fill = colorBrush;
-            ColorAnimation colorAnimation = new ColorAnimation(Color.FromRgb(0, 255, 0), TimeSpan.FromSeconds(3))
-            {
-                EasingFunction = backEase
-            };
             colorAnimation.Completed += OnComplete;
             colorBrush.BeginAnimation(SolidColorBrush.ColorProperty, colorAnimation);
         }

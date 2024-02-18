@@ -4,69 +4,194 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        xmlns:controls ="clr-namespace:Tracker.UserControls.Targets"
-        mc:Ignorable="d"
+        xmlns:local="clr-namespace:Tracker"
+        xmlns:controls ="clr-namespace:Tracker.UserControls.Targets" mc:Ignorable="d"
         FontSize="18" FontFamily="{DynamicResource MaterialDesignFont}" ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen" WindowStyle="None" AllowsTransparency="True" Background="Transparent" MouseMove="Window_MouseMove" KeyDown="Window_KeyDown">
+
+    <Window.Resources>
+        <Storyboard x:Key="OpenMenu">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="Menu">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="300"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="CloseMenu">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="Menu">
+                <EasingDoubleKeyFrame KeyTime="0" Value="300"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <local:TimeOnlyConverter x:Key="TimeOnlyConverter"/>
+    </Window.Resources>
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonOpenMenu">
+            <BeginStoryboard Storyboard="{StaticResource OpenMenu}"/>
+        </EventTrigger>
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonCloseMenu">
+            <BeginStoryboard Storyboard="{StaticResource CloseMenu}"/>
+        </EventTrigger>
+    </Window.Triggers>
+
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="60"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Grid Background="Black" MouseDown="Grid_MouseDown">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="50*"/>
-                <ColumnDefinition Width="50*"/>
-                <ColumnDefinition Width="80"/>
-            </Grid.ColumnDefinitions>
-            <Grid Grid.Row="0">
-                <TextBlock Foreground="#ffffffff" Name="score"
+        <StackPanel Panel.ZIndex="1" Name="Menu" Background="Black" 
+                    HorizontalAlignment="Left" Width="300">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Button x:Name="ButtonCloseMenu" Height="60"
                         HorizontalAlignment="Stretch" 
-                        VerticalAlignment="Center" 
-                        TextAlignment="Center"
-                        FontSize="36">
-                        Счёт: 999999999
-                </TextBlock>
-            </Grid>
-            <Grid Grid.Column="1" Grid.Row="0">
-                <TextBlock Foreground="#ffffffff" Name="targets"
-                        HorizontalAlignment="Stretch" 
-                        VerticalAlignment="Center" 
-                        TextAlignment="Center" 
-                        FontSize="36">
-                        Цели: 999/999
-                </TextBlock>
-            </Grid>
-            <Grid Grid.Column="2" Grid.Row="0">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button x:Name="BtnMinimize" Height="30" 
-                                Width="30" HorizontalAlignment="Right" Margin="5"
-                                VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" 
-                                Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#ffffff" 
-                                Click="BtnMinimize_Click" 
-                                MouseEnter="BtnMinimize_MouseEnter" 
-                                MouseLeave="BtnMinimize_MouseLeave">
-                        <materialDesign:PackIcon Kind="WindowMinimize" Width="25" Height="25"/>
+                        Style="{StaticResource MaterialDesignFlatButton}" 
+                        Background="{x:Null}" BorderBrush="{x:Null}" 
+                        Foreground="White">
+                        <materialDesign:PackIcon HorizontalAlignment="Center" Kind="ArrowLeft" Width="40" Height="40"/>
                     </Button>
-                    <Button Height="30" Width="30" 
-                                Name="BtnClose" VerticalAlignment="Center" Margin="5"
-                                Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" 
-                                Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#ffffff" 
-                                Click="BtnClose_Click" 
-                                MouseEnter="BtnClose_MouseEnter" 
-                                MouseLeave="BtnClose_MouseLeave">
-                        <materialDesign:PackIcon Kind="Close" Width="25" Height="25"/>
-                    </Button>
-                </StackPanel>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0 50">
+                        <TextBlock TextAlignment="Center" Foreground="White" 
+                                   FontSize="35" Margin="0 5 0 30" Name="target_number"
+                                   Text="{Binding index,
+                                         StringFormat='МИШЕНЬ {0}',
+                                         UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBlock TextAlignment="Center" Foreground="White" 
+                                   FontSize="22" Margin="0 5 0 5" Name="target_first_show"
+                                   Text="{Binding startTime, 
+                                        Converter={StaticResource TimeOnlyConverter}, 
+                                        StringFormat='Время начала {0}',
+                                        UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBlock TextAlignment="Center" Foreground="White" 
+                                   FontSize="22" Margin="0 5 0 5" Name="target_last_show"
+                                   Text="{Binding endTime, 
+                                         Converter={StaticResource TimeOnlyConverter}, 
+                                         StringFormat='Время завершения {0}',
+                                         UpdateSourceTrigger=PropertyChanged}"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="100"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="0">
+                                <TextBlock Foreground="White" FontSize="22" TextAlignment="Center"
+                                        Margin="10 5 0 5" HorizontalAlignment="Stretch">
+                                Цвет линии:
+                                </TextBlock>
+                            </Grid>
+                            <Grid Grid.Column="1">
+                                <Rectangle x:Name="target_line_color" Width="35" Height="35" Fill="Aqua"/>
+                            </Grid>
+                        </Grid>
+                        <Button Margin="40 10 40 10" Style="{StaticResource MaterialDesignOutlinedButton}"
+                                FontSize="22" Height="70">
+                            <TextBlock TextAlignment="Center" TextWrapping="Wrap">Нарисовать путь мишени</TextBlock>
+                        </Button>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50*"/>
+                                <ColumnDefinition Width="50*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid>
+                                <Button HorizontalAlignment="Center" Name="ButtonPrevTarget"                                        
+                                    Height="80" Width="80" Foreground="White"
+                                    Style="{StaticResource MaterialDesignFlatButton}" 
+                                    Background="{x:Null}" BorderBrush="{x:Null}" Click="ButtonPrevTarget_Click" IsEnabled="False">
+                                    <materialDesign:PackIcon HorizontalAlignment="Center" 
+                                                             Kind="ChevronLeft" 
+                                                             Width="80" Height="80"/>
+                                </Button>
+                            </Grid>
+                            <Grid Grid.Column="1">
+                                <Button HorizontalAlignment="Center" Name="ButtonNextTarget"                                        
+                                    Height="80" Width="80" Foreground="White"
+                                    Style="{StaticResource MaterialDesignFlatButton}" 
+                                    Background="{x:Null}" BorderBrush="{x:Null}" Click="ButtonNextTarget_Click">
+                                    <materialDesign:PackIcon HorizontalAlignment="Center" 
+                                                             Kind="ChevronRight" 
+                                                             Width="80" Height="80"/>
+                                </Button>
+                            </Grid>
+                        </Grid>
+                        <Button Margin="40 150 40 10" Style="{StaticResource MaterialDesignOutlinedButton}"
+                                FontSize="22" Height="70">
+                            <TextBlock TextAlignment="Center" TextWrapping="Wrap">Нарисовать все пути</TextBlock>
+                        </Button>
+                    </StackPanel>
+                </Grid>
             </Grid>
-        </Grid>
-        <Grid x:Name="game_grid" Background="White" Grid.Row="1" Width="1280" Height="720">
-            <controls:AnimatedTargetControl x:Name="a1" Margin="10,10,1020,460"/>
-            <controls:AnimatedTargetControl x:Name="a2" Margin="1120,285,10,285"/>
-            <controls:AnimatedTargetControl x:Name="a3" Margin="1120,560,10,10"/>
-            <controls:AnimatedTargetControl x:Name="a4" Margin="1120,10,10,560"/>
-            <controls:AnimatedTargetControl x:Name="a5" Margin="10,560,1120,10"/>
-            <controls:AnimatedTargetControl x:Name="a6" Margin="10,285,1120,285"/>
+        </StackPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Background="Black" MouseDown="Grid_MouseDown">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="50*"/>
+                    <ColumnDefinition Width="50*"/>
+                    <ColumnDefinition Width="80"/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0" Grid.Row="0">
+                    <Button Name="ButtonOpenMenu" Height="60" Width="60" 
+                        HorizontalAlignment="Left" 
+                        Style="{StaticResource MaterialDesignFlatButton}" 
+                        Background="{x:Null}" BorderBrush="{x:Null}" 
+                        Foreground="White">
+                        <materialDesign:PackIcon HorizontalAlignment="Center" Kind="Menu" Width="40" Height="40"/>
+                    </Button>
+                </Grid>
+                <Grid Grid.Column="1" Grid.Row="0">
+                    <TextBlock Foreground="#ffffffff" Name="score"
+                            HorizontalAlignment="Stretch" 
+                            VerticalAlignment="Center" 
+                            TextAlignment="Center"
+                            FontSize="36">
+                            Счёт: 999999999
+                    </TextBlock>
+                </Grid>
+                <Grid Grid.Column="2" Grid.Row="0">
+                    <TextBlock Foreground="#ffffffff" Name="targets"
+                            HorizontalAlignment="Stretch" 
+                            VerticalAlignment="Center" 
+                            TextAlignment="Center" 
+                            FontSize="36">
+                            Цели: 999/999
+                    </TextBlock>
+                </Grid>
+                <Grid Grid.Column="3" Grid.Row="0">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button x:Name="BtnMinimize" Height="30" 
+                                    Width="30" HorizontalAlignment="Right" Margin="5"
+                                    VerticalAlignment="Center" Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" 
+                                    Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#ffffff" 
+                                    Click="BtnMinimize_Click" 
+                                    MouseEnter="BtnMinimize_MouseEnter" 
+                                    MouseLeave="BtnMinimize_MouseLeave">
+                            <materialDesign:PackIcon Kind="WindowMinimize" Width="25" Height="25"/>
+                        </Button>
+                        <Button Height="30" Width="30" 
+                                    Name="BtnClose" VerticalAlignment="Center" Margin="5"
+                                    Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" 
+                                    Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#ffffff" 
+                                    Click="BtnClose_Click" 
+                                    MouseEnter="BtnClose_MouseEnter" 
+                                    MouseLeave="BtnClose_MouseLeave">
+                            <materialDesign:PackIcon Kind="Close" Width="25" Height="25"/>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+            <Grid x:Name="game_grid" Background="White" Grid.Row="1" Width="1280" Height="720">
+                <controls:AnimatedTargetControl x:Name="a1" Margin="10,10,1120,560"/>
+                <controls:AnimatedTargetControl x:Name="a2" Margin="1120,285,10,285"/>
+                <controls:AnimatedTargetControl x:Name="a3" Margin="1120,560,10,10"/>
+                <controls:AnimatedTargetControl x:Name="a4" Margin="1120,10,10,560"/>
+                <controls:AnimatedTargetControl x:Name="a5" Margin="10,560,1120,10"/>
+                <controls:AnimatedTargetControl x:Name="a6" Margin="10,285,1120,285"/>
+            </Grid>
         </Grid>
     </Grid>
 </Window>
