@@ -21,7 +21,7 @@ namespace Tracker.UserControls.Scope
             init_image();
         }
 
-        public Scope(double x_center, double y_center, double max_y, double max_x, int width, int height) {
+        public Scope(double x_center, double y_center, double max_x, double max_y, int width, int height) {
             this.x_center = x_center;
             this.y_center = y_center;
             this.max_y = max_y;
@@ -97,8 +97,13 @@ namespace Tracker.UserControls.Scope
         }
 
         public Point MoveProjection(double x, double y) {
-            var new_x = x * width / max_x;
-            var new_y = y * height/ max_y;
+            var new_x = -x * width / 2 / Math.Abs(max_x) + width/2 - 12;
+            var new_y = -y * height/ 2 / Math.Abs(max_y) + height/2 - 12;
+
+            //////////DEBUG ONLY///////////
+            /*var new_x = -x * 1280 / 15 + 1280 / 2;
+            var new_y = y * 720 / 15 + 720 / 2;*/
+            ///////////////////////////////
             if (new_x < 0) new_x = 0;
             if (new_x > width - 25) new_x = width - 25;
             if (new_y < 0) new_y = 0;

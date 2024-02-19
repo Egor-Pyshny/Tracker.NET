@@ -54,7 +54,7 @@
                 Height="77" Width="170" materialDesign:HintAssist.Hint="X angle"
                 HorizontalAlignment="Center" HorizontalContentAlignment="Center"
                 VerticalAlignment="Top" Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                FontSize="32" IsEnabled="False" Margin="0,20,0,0" Name="x_textbox">
+                FontSize="32" IsEnabled="False" Margin="0,20,0,0" Name="x_textbox" >
                     <TextBox.Text>
                         <Binding Path="XAngle" UpdateSourceTrigger="PropertyChanged">
                             <Binding.ValidationRules>

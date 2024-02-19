@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,7 +14,7 @@ namespace Tracker.AppContext
 {
     public class Context
     {
-        public class GameContext
+        public class GameContext : INotifyPropertyChanged
         {
             public enum MoveMethod
             {
@@ -26,9 +28,16 @@ namespace Tracker.AppContext
             public int GameAreaHeight = 720;
             public double XCenterAngle;
             public double YCenterAngle;
-            public IPAddress address = IPAddress.Parse("192.168.150.1");
+            public IPAddress address = IPAddress.Parse("192.168.150.2");
             public int port = 9998;
             public MoveMethod moveMethod = MoveMethod.PROJECTION;
+
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
 
         public static UserModel User = new UserModel();

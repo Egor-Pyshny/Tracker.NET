@@ -71,21 +71,22 @@
                                          UpdateSourceTrigger=PropertyChanged}"/>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="200"/>
-                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="250"/>
+                                <ColumnDefinition Width="50"/>
                             </Grid.ColumnDefinitions>
                             <Grid Grid.Column="0">
                                 <TextBlock Foreground="White" FontSize="22" TextAlignment="Center"
                                         Margin="10 5 0 5" HorizontalAlignment="Stretch">
-                                Цвет линии:
+                                Цвет линии к мишени:
                                 </TextBlock>
                             </Grid>
                             <Grid Grid.Column="1">
                                 <Rectangle x:Name="target_line_color" Width="35" Height="35" Fill="Aqua"/>
                             </Grid>
                         </Grid>
-                        <Button Margin="40 10 40 10" Style="{StaticResource MaterialDesignOutlinedButton}"
-                                FontSize="22" Height="70">
+                        <Button Margin="40 10 40 10" Name="DrawPath"
+                                Style="{StaticResource MaterialDesignOutlinedButton}"
+                                FontSize="22" Height="70" Click="DrawPath_Click">
                             <TextBlock TextAlignment="Center" TextWrapping="Wrap">Нарисовать путь мишени</TextBlock>
                         </Button>
                         <Grid>
@@ -114,8 +115,9 @@
                                 </Button>
                             </Grid>
                         </Grid>
-                        <Button Margin="40 150 40 10" Style="{StaticResource MaterialDesignOutlinedButton}"
-                                FontSize="22" Height="70">
+                        <Button Margin="40 150 40 10" Name="DrawAllPathes"
+                                Style="{StaticResource MaterialDesignOutlinedButton}"
+                                FontSize="22" Height="70" Click="DrawAllPathes_Click">
                             <TextBlock TextAlignment="Center" TextWrapping="Wrap">Нарисовать все пути</TextBlock>
                         </Button>
                     </StackPanel>
@@ -139,7 +141,7 @@
                         HorizontalAlignment="Left" 
                         Style="{StaticResource MaterialDesignFlatButton}" 
                         Background="{x:Null}" BorderBrush="{x:Null}" 
-                        Foreground="White">
+                        Foreground="White" IsEnabled="False" Click="ButtonOpenMenu_Click">
                         <materialDesign:PackIcon HorizontalAlignment="Center" Kind="Menu" Width="40" Height="40"/>
                     </Button>
                 </Grid>
@@ -185,12 +187,12 @@
                 </Grid>
             </Grid>
             <Grid x:Name="game_grid" Background="White" Grid.Row="1" Width="1280" Height="720">
-                <controls:AnimatedTargetControl x:Name="a1" Margin="10,10,1120,560"/>
+                <controls:AnimatedTargetControl x:Name="a1" Margin="253,73,877,497"/>
                 <controls:AnimatedTargetControl x:Name="a2" Margin="1120,285,10,285"/>
                 <controls:AnimatedTargetControl x:Name="a3" Margin="1120,560,10,10"/>
                 <controls:AnimatedTargetControl x:Name="a4" Margin="1120,10,10,560"/>
-                <controls:AnimatedTargetControl x:Name="a5" Margin="10,560,1120,10"/>
-                <controls:AnimatedTargetControl x:Name="a6" Margin="10,285,1120,285"/>
+                <controls:AnimatedTargetControl x:Name="a5" Margin="272,540,858,30"/>
+                <controls:AnimatedTargetControl x:Name="a6" Margin="115,285,1015,285"/>
             </Grid>
         </Grid>
     </Grid>

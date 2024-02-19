@@ -62,13 +62,15 @@ namespace Tracker
         private AnimatedTargetControl currentTarget;
         private List<AnimatedTargetControl> animated_targets_list = new List<AnimatedTargetControl>();
         private TargetStatistic stat = new TargetStatistic();
+        private List<Polyline> pathes = new List<Polyline>();
 
         public GameWindow()
         {
             InitializeComponent();
             Reciver.Start();
 
-            Start();
+            //Start();
+
             this.DataContext = stat;
             path_logger = new Timer(log_path, null, 0, 16);
             MyWindowController.register(this);          
@@ -91,7 +93,7 @@ namespace Tracker
                     Thickness currentMargin = scope.image.Margin;
                     currentMargin.Left = temp.X;
                     currentMargin.Top = temp.Y;
-                    //scope.image.Margin = currentMargin;
+                    scope.image.Margin = currentMargin;
                 });
                 if (completed)
                 {
@@ -130,26 +132,31 @@ namespace Tracker
                 }
                 else
                 {
+                    currentTarget.statistic.index = ind;
+                    currentTarget.statistic.endTime = DateTime.Now;
                     currentTarget.statistic.set_line_color();
-                    isgame = false;
+                    isgame = false;                   
                     Dispatcher.Invoke(() =>
                     {
-                        ButtonOpenMenu.IsEnabled = true;
-                        DrawPathes();
+                        ButtonOpenMenu.IsEnabled = true;     
+                        DrawPathesAndNumbers();
                     });
                     path_logger.Dispose();
                 }
             }
         }
 
-        private void DrawPathes() {
+        private void DrawPathesAndNumbers() {
             foreach (AnimatedTargetControl target in animated_targets_list) {
+                target.target_number.Text = target.statistic.index.ToString();
+                target.target_number.Visibility = Visibility.Visible;
                 var myPolyline = new Polyline();
                 myPolyline.Stroke = new SolidColorBrush(target.statistic.lineColor);
                 myPolyline.StrokeThickness = 2;
                 myPolyline.FillRule = FillRule.EvenOdd;
                 myPolyline.Points = target.statistic.way;
-                game_grid.Children.Add(myPolyline);
+                myPolyline.Name = $"Path{target.statistic.index}";
+                pathes.Add(myPolyline);
             }
         }
 
@@ -353,6 +360,32 @@ namespace Tracker
             if (stat_ind == animated_targets_list.Count - 1) { 
                 (sender as Button).IsEnabled = false;
             }
+        }
+
+        private void CleanPathes() {
+            foreach (var path in pathes) { 
+                game_grid.Children.Remove(path);
+            }
+        }
+
+        private void DrawAllPathes_Click(object sender, RoutedEventArgs e)
+        {
+            CleanPathes();
+            foreach (var path in pathes)
+            { 
+                game_grid.Children.Add(path);
+            }
+        }
+
+        private void DrawPath_Click(object sender, RoutedEventArgs e)
+        {
+            CleanPathes();
+            game_grid.Children.Add(pathes[stat_ind]);
+        }
+
+        private void ButtonOpenMenu_Click(object sender, RoutedEventArgs e)
+        {
+            this.DataContext = animated_targets_list[stat_ind].statistic;
         }
 
         public void OnGameStart()

@@ -7,5 +7,7 @@
              mc:Ignorable="d" VerticalAlignment="Top" HorizontalAlignment="Left">
     <Grid>
         <Ellipse Name="target" Width="150" Height="150" Fill="#555555"/>
+        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" 
+                   FontSize="70" Name="target_number" Visibility="Collapsed"/>
     </Grid>
 </UserControl>

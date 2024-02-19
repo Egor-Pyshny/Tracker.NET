@@ -72,11 +72,6 @@ namespace Tracker.UserControls
             thread.Join();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void x_calibrating_Click(object sender, RoutedEventArgs e)
         {
             if (!calibrating_x)
