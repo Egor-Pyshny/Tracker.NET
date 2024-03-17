@@ -23,6 +23,7 @@ namespace Tracker
         {
             { "ItemPlay", new MainPageControl()},
             { "ItemSettings", new SettingsWindowControl()},
+            { "ItemCreateLevel", new LevelCreatingControl()},
         };
         public UserControl control;
         public MainWindow()

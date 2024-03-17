@@ -7,7 +7,7 @@
              mc:Ignorable="d" Height="300" Width="300"  
              MouseLeftButtonDown="Grid_MouseLeftButtonDown"
              MouseMove="Grid_MouseMove" VerticalAlignment="Top" HorizontalAlignment="Left"
-             MouseLeftButtonUp="Grid_MouseLeftButtonUp" MouseEnter="UserControl_MouseEnter" MouseLeave="UserControl_MouseLeave">
+             MouseLeftButtonUp="Grid_MouseLeftButtonUp">
     <Grid>
         <Grid.RenderTransform>
             <TranslateTransform x:Name="controlTranslateTransform"/>

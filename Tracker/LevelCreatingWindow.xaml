@@ -52,21 +52,16 @@
             </Grid.ColumnDefinitions>
             <Grid Background="#05B790">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="500"/>
+                    <RowDefinition Height="400"/>
+                    <RowDefinition Height="230"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Grid>
                     <ListView x:Name="ListViewTargets" Foreground="#000000" Visibility="Visible"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionMode="Multiple" 
                               SelectionChanged="ListViewTargets_SelectionChanged">
-                        <ListViewItem HorizontalContentAlignment="Center" x:Name="_5section">
-                            <controls:_5SectionTargetControl HorizontalAlignment="Center" Height="150" />
-                        </ListViewItem>
-                        <ListViewItem HorizontalContentAlignment="Center" x:Name="_4section" >
-                            <controls:_4SectionTargetControl HorizontalAlignment="Center" Height="100" />
-                        </ListViewItem>
-                        <ListViewItem HorizontalContentAlignment="Center" x:Name="_3section" >
-                            <controls:_3SectionTargetControl HorizontalAlignment="Center" Height="50" />
+                        <ListViewItem HorizontalContentAlignment="Center" x:Name="animated">
+                            <controls:AnimatedTargetControl HorizontalAlignment="Center" Height="150" />
                         </ListViewItem>
                     </ListView>
                 </Grid>
@@ -85,9 +80,17 @@
                         </StackPanel>
                     </Border>
                 </Grid>
+                <Grid Grid.Row="2">
+                    <Button FontSize="17" Foreground="Black" Name="save_btn"
+                        materialDesign:ButtonProgressAssist.IsIndeterminate="False"
+                        materialDesign:ButtonProgressAssist.IsIndicatorVisible="True"
+                        materialDesign:ButtonProgressAssist.Value="-1" Width="170"
+                        Content="Save" VerticalAlignment="Center" HorizontalAlignment="Center"
+                        Style="{StaticResource MaterialDesignOutlinedButton}" Cursor="Hand" Click="save_btn_Click"/>
+                </Grid>
             </Grid>
             <Grid Background="#ffffff" Grid.Column="1" Name="content_grid">
-
+                 
             </Grid>
         </Grid>
     </Grid>

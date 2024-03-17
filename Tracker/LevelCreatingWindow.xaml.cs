@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,6 +29,8 @@ namespace Tracker
     {
         private UserControl target;
         private int target_number = 1;
+        private List<AnimatedTargetControl> targets = new List<AnimatedTargetControl>();
+
         public LevelCreatingWindow()
         {
             InitializeComponent();
@@ -65,7 +69,8 @@ namespace Tracker
 
         private void BtnClose_Click(object sender, RoutedEventArgs e)
         {
-            App.Current.Shutdown();
+            this.Hide();
+            MyWindowController.main().Show();
         }
 
         private void taskbar_MouseDown(object sender, MouseButtonEventArgs e)
@@ -85,34 +90,34 @@ namespace Tracker
                 item = (ListViewItem)((sender as ListView).SelectedItems[0]);
             switch (item?.Name)
             {
-                case "_5section":
-                    target = new _5SectionTargetControl();
+                case "animated":
+                    target = new AnimatedTargetControl();
                     target.Name = "Target" + target_number;
                     target_number++;
                     (target as ITarget).mode = Mode.DESIGN;
                     target.Margin = new Thickness(0, 0, 980, 420);
                     content_grid.Children.Add(target);
+                    targets.Add((AnimatedTargetControl)target);
                     (sender as ListView).SelectedItems.Clear();
                     break;
-                case "_4section":
-                    (sender as ListView).SelectedItems.Clear();
-                    break;
-                case "_3section":
-                    break;
-                    (sender as ListView).SelectedItems.Clear();
                 default:
                     break;
             }
         }
 
-        private void Button_MouseEnter(object sender, MouseEventArgs e)
+        private void save_btn_Click(object sender, RoutedEventArgs e)
         {
-           
-        }
-
-        private void Button_MouseLeave(object sender, MouseEventArgs e)
-        {
-            
+            StringBuilder stringBuilder = new StringBuilder();
+            List<TargetInfoModel> models = new List<TargetInfoModel>();
+            foreach (AnimatedTargetControl t in targets) {
+                TargetInfoModel model = new TargetInfoModel();
+                model.x = (int)t.controlTranslateTransform.X;
+                model.y = (int)t.controlTranslateTransform.Y;
+                model.type = "animated";
+                models.Add(model);
+            }
+            stringBuilder.Append(JsonConvert.SerializeObject(models));
+            File.WriteAllText("data.json", stringBuilder.ToString());
         }
     }
 }

@@ -3,11 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Tracker.UserControls.Targets"
-             mc:Ignorable="d" VerticalAlignment="Top" HorizontalAlignment="Left">
+             xmlns:local="clr-namespace:Tracker.UserControls.Targets" 
+             VerticalAlignment="Top" HorizontalAlignment="Left" Width="150" Height="150"
+             mc:Ignorable="d" MouseLeftButtonDown="Grid_MouseLeftButtonDown"
+             MouseMove="Grid_MouseMove" MouseLeftButtonUp="Grid_MouseLeftButtonUp">
     <Grid>
-        <Ellipse Name="target" Width="150" Height="150" Fill="#555555"/>
-        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" 
-                   FontSize="70" Name="target_number" Visibility="Collapsed"/>
+        <Grid.RenderTransform>
+            <TranslateTransform x:Name="controlTranslateTransform"/>
+        </Grid.RenderTransform>
+        <Border x:Name="grid">
+            <Grid>
+                <Ellipse Name="target" Width="150" Height="150" Fill="#555555"/>
+                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" 
+                        FontSize="70" Name="target_number" Visibility="Collapsed"/>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

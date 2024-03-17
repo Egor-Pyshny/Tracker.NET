@@ -38,7 +38,7 @@ namespace Tracker
 
         private bool Validate() {
             bool res = true;
-            if ((Context.User.DateOfBirth = birth_date.ToString()) == "") {
+            if (registration && (Context.User.DateOfBirth = birth_date.ToString()) == "") {
                 res = false;
                 birth_date.BorderBrush = Brushes.Red;
             }

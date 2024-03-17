@@ -84,7 +84,7 @@ namespace Tracker.UserControls.Targets
             
 
         }
-
+        
         private void UserControl_MouseLeave(object sender, MouseEventArgs e)
         {
             ((UserControl)sender).BeginAnimation(SolidColorBrush.ColorProperty, null);

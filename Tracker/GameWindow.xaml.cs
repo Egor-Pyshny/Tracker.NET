@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -83,7 +85,7 @@ namespace Tracker
                 p = Reciver.p;
                 p.X -= scope.x_center;
                 p.Y -= scope.y_center;
-                Point temp = scope.MoveProjection(p.X, p.Y);            
+                //Point temp = scope.MoveProjection(p.X, p.Y);            
                 bool completed = false;
                 Dispatcher.Invoke(() =>
                 {
@@ -91,9 +93,9 @@ namespace Tracker
                     completed = currentTarget.Check((int)t.Left + 12, (int)t.Top + 12, 1);
                     if(completed) currentTarget.statistic.last_hit = new Point((int)t.Left + 12, (int)t.Top + 12);
                     Thickness currentMargin = scope.image.Margin;
-                    currentMargin.Left = temp.X;
-                    currentMargin.Top = temp.Y;
-                    scope.image.Margin = currentMargin;
+                    //currentMargin.Left = temp.X;
+                    //currentMargin.Top = temp.Y;
+                    //scope.image.Margin = currentMargin;
                 });
                 if (completed)
                 {
@@ -170,17 +172,29 @@ namespace Tracker
                 Context.Game.GameAreaWidth,
                 Context.Game.GameAreaHeight
                 );
+            List<TargetInfoModel> models = new List<TargetInfoModel>();
+            string jsonFromFile = File.ReadAllText("data.json");
+            models = (List<TargetInfoModel>)JsonConvert.DeserializeObject<List<TargetInfoModel>>(jsonFromFile);
+            foreach (TargetInfoModel model in models) {
+                AnimatedTargetControl a = new AnimatedTargetControl();
+                a.controlTranslateTransform.X = model.x;
+                a.controlTranslateTransform.Y = model.y;
+                animated_targets_list.Add(a);
+                a.Visibility = Visibility.Hidden;
+                game_grid.Children.Add(a);
+            }
             game_grid.Children.Add(scope.image);
             Grid.SetZIndex(scope.image, 1);
-            animated_targets_list.Add(a1);
+            /*animated_targets_list.Add(a1);
             //animated_targets_list.Add(a2);
             //animated_targets_list.Add(a3);
             //animated_targets_list.Add(a4);
             a5.Visibility = Visibility.Hidden;
             a6.Visibility = Visibility.Hidden;
             animated_targets_list.Add(a5);
-            animated_targets_list.Add(a6);
+            animated_targets_list.Add(a6);*/
             currentTarget = animated_targets_list[ind];
+            currentTarget.Visibility = Visibility.Visible;
             currentTarget.statistic.index = ind;
             ind++;
             currentTarget.statistic.startTime = DateTime.Now;
@@ -228,6 +242,7 @@ namespace Tracker
         private void BtnClose_Click(object sender, RoutedEventArgs e)
         {
             Stop();
+            game_grid.Children.Clear();
             this.Hide();
             MyWindowController.main().Show();
             //MyWindowController.Close(this);
