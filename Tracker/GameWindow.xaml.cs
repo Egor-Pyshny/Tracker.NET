@@ -23,7 +23,6 @@ using Tracker.UserControls.Targets;
 
 namespace Tracker
 {
-
     public class TimeOnlyConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -45,7 +44,6 @@ namespace Tracker
     /// </summary>
     public partial class GameWindow : Window
     {
-        private int targets_amount = 5;
         private int minttl = 1;
         private int maxttl = 1;
         private int ind = 0;
@@ -85,7 +83,7 @@ namespace Tracker
                 p = Reciver.p;
                 p.X -= scope.x_center;
                 p.Y -= scope.y_center;
-                //Point temp = scope.MoveProjection(p.X, p.Y);            
+                Point temp = scope.MoveProjection(p.X, p.Y);            
                 bool completed = false;
                 Dispatcher.Invoke(() =>
                 {
@@ -93,9 +91,9 @@ namespace Tracker
                     completed = currentTarget.Check((int)t.Left + 12, (int)t.Top + 12, 1);
                     if(completed) currentTarget.statistic.last_hit = new Point((int)t.Left + 12, (int)t.Top + 12);
                     Thickness currentMargin = scope.image.Margin;
-                    //currentMargin.Left = temp.X;
-                    //currentMargin.Top = temp.Y;
-                    //scope.image.Margin = currentMargin;
+                    currentMargin.Left = temp.X;
+                    currentMargin.Top = temp.Y;
+                    scope.image.Margin = currentMargin;
                 });
                 if (completed)
                 {
@@ -163,6 +161,7 @@ namespace Tracker
         }
 
         public void Start() {
+            isgame = true;
             ButtonOpenMenu.IsEnabled = false;
             scope = new Scope(
                 Context.Game.XCenterAngle,
@@ -208,8 +207,8 @@ namespace Tracker
         public void Stop() {
             runnig = false;
             path_logger.Dispose();
-            //timer.Dispose();
             thread.Abort();
+            thread.Join();
         }
 
         private void Window_MouseMove(object sender, MouseEventArgs e)
@@ -243,6 +242,8 @@ namespace Tracker
         {
             Stop();
             game_grid.Children.Clear();
+            animated_targets_list.Clear();
+            ind = 0;
             this.Hide();
             MyWindowController.main().Show();
             //MyWindowController.Close(this);
@@ -267,7 +268,7 @@ namespace Tracker
         }
 
         private void PlaceTargetsRandom() {
-            Random rand = new Random();
+            /*Random rand = new Random();
             int prev_x = 0, prev_y = 0, prev_size = 0;
             for (int i = 0; i < targets_amount; i++)
             {
@@ -281,7 +282,7 @@ namespace Tracker
                     prev_size = newtarget.size;
                     continue;
                 }
-                /*while (true)
+                *//*while (true)
                 {
                     if ((newtarget.x >= prev_x - newtarget.size) && 
                         (newtarget.x <= prev_x + prev_size + newtarget.size) &&
@@ -292,8 +293,8 @@ namespace Tracker
                         newtarget.y = rand.Next(0, (int)(game_grid.Height - newtarget.size + 1));
                     }
                     else break;
-                }*/
-            }
+                }*//*
+            }*/
         }
 
         private void SwitchTarget1(object sender)
@@ -333,7 +334,7 @@ namespace Tracker
 
         private void GenerateTargets()
         {
-            Random rand = new Random();
+            /*Random rand = new Random();
             for (int i = 0; i < targets_amount; i++)
             {
                 TargetModel newtarget = new TargetModel(rand.Next(3, 6));
@@ -341,7 +342,7 @@ namespace Tracker
                 targets_list.Add(newtarget);
             }
             PlaceTargetsRandom();
-            timer.Change(0, Timeout.Infinite);
+            timer.Change(0, Timeout.Infinite);*/
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
@@ -405,13 +406,13 @@ namespace Tracker
 
         public void OnGameStart()
         {
-            MainWindow mainWindow = (MainWindow)MyWindowController.main();
+            /*MainWindow mainWindow = (MainWindow)MyWindowController.main();
             var control = (MainPageControl)mainWindow.controls["ItemPlay"];
             minttl = (int)control.minttl_slider.Value;
             maxttl = (int)control.maxttl_slider.Value;
             targets_amount = (int)control.targets_slider.Value;
             scale = this.Width / 1280;
-            GenerateTargets();
+            GenerateTargets();*/
         }
     }
 }

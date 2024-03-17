@@ -1,6 +1,7 @@
 ﻿using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -41,6 +42,7 @@ namespace Tracker.UserControls
             InitializeComponent();
             runnig = true;
             thread = new Thread(ThreadFunc);
+            this.DataContext = Context.Game;
             thread.Start();
         }
 
@@ -55,10 +57,18 @@ namespace Tracker.UserControls
                 }
                 if (calibrating_x) {
                     Context.Game.XAngle = p.X;
+                    Dispatcher.Invoke(() =>
+                    {
+                        x_textbox.Text = p.X.ToString("0.000", CultureInfo.GetCultureInfo("en-US"));
+                    });
                 }
                 if (calibrating_y)
                 {
                     Context.Game.YAngle = p.Y;
+                    Dispatcher.Invoke(() =>
+                    {
+                        y_textbox.Text = p.Y.ToString("0.000", CultureInfo.GetCultureInfo("en-US"));
+                    });
                 }
                 if (calibrating_center) {
                     Context.Game.XCenterAngle = p.X;
@@ -69,6 +79,7 @@ namespace Tracker.UserControls
 
         public void Stop() {
             runnig = false;
+            thread.Abort();
             thread.Join();
         }
 
@@ -92,14 +103,14 @@ namespace Tracker.UserControls
         {
             if (!calibrating_center)
             {
-                calibrating_center = false;
+                center_calibrated = false;
                 calibrating_center = true;
                 (sender as Button).SetValue(ButtonProgressAssist.IsIndeterminateProperty, true);
                 (sender as Button).Content = "Stop calibrating center";
             }
             else
             {
-                calibrating_center = true;
+                center_calibrated = true;
                 calibrating_center = false;
                 (sender as Button).SetValue(ButtonProgressAssist.IsIndeterminateProperty, false);
                 (sender as Button).Content = "Start calibrating center";
@@ -137,5 +148,6 @@ namespace Tracker.UserControls
         {
             runnig = true;
         }
+
     }
 }
