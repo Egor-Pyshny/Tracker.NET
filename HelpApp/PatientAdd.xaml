@@ -1,0 +1,65 @@
+﻿<Window x:Class="HelpApp.PatientAdd"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HelpApp"
+        mc:Ignorable="d"
+        Title="PatientAdd" Height="920" Width="400" Closing="Window_Closing">
+    <Grid>
+        <StackPanel Margin="0 0 0 0">
+            <Label Width="300" Content="Фамилия" FontSize="20" Margin="0 0 0 -15"/>
+            <TextBox Width="300" Height="35" HorizontalAlignment="Center" Margin="10"
+             TextAlignment="Center" FontSize="27" x:Name="secondName"/>
+            <Label Width="300" Content="Имя" FontSize="20" Margin="0 -10 0 -15"/>
+            <TextBox Width="300" Height="35" HorizontalAlignment="Center" Margin="10"
+             TextAlignment="Center" FontSize="27" x:Name="firstName"/>
+            <Label Width="300" Content="Отчество" FontSize="20" Margin="0 -10 0 -15"/>
+            <TextBox Width="300" Height="35" HorizontalAlignment="Center" Margin="10"
+             TextAlignment="Center" FontSize="27" x:Name="thirdName"/>
+            <Label Width="300" Content="Электронная почта" FontSize="20" Margin="0 -10 0 -15"/>
+            <TextBox Width="300" Height="35" HorizontalAlignment="Center" Margin="10"
+            TextAlignment="Center" FontSize="27" x:Name="email"/>
+            <Label Width="300" Content="Идентификатор паспорта" FontSize="20" Margin="0 -10 0 -15"/>
+            <TextBox Width="300" Height="35" HorizontalAlignment="Center" Margin="10"
+             TextAlignment="Center" FontSize="27" x:Name="passport_id"/>
+            <Label Width="300" Content="Страна" FontSize="20" Margin="0 -10 0 -15"/>
+            <TextBox Width="300" Height="35" HorizontalAlignment="Center" Margin="10"
+             TextAlignment="Center" FontSize="27" x:Name="country"/>
+            <Label Width="300" Content="Город" FontSize="20" Margin="0 -10 0 -15"/>
+            <TextBox Width="300" Height="35" HorizontalAlignment="Center" Margin="10"
+             TextAlignment="Center" FontSize="27" x:Name="city"/>
+            <Label Width="300" Content="Улица" FontSize="20" Margin="0 -10 0 -15"/>
+            <TextBox Width="300" Height="35" HorizontalAlignment="Center" Margin="10"
+             TextAlignment="Center" FontSize="27" x:Name="street"/>
+            <Label Width="300" Content="Здание" FontSize="20" Margin="0 -10 0 -15"/>
+            <TextBox Width="300" Height="35" HorizontalAlignment="Center" Margin="10"
+             TextAlignment="Center" FontSize="27" x:Name="building"/>
+            <Label Width="300" Content="Квартира" FontSize="20" Margin="0 -10 0 -15"/>
+            <TextBox Width="300" Height="35" HorizontalAlignment="Center" Margin="10"
+             TextAlignment="Center" FontSize="27" x:Name="appartments"/>
+            <Label Width="300" Content="Диагноз" FontSize="20" Margin="0 -10 0 -15"/>
+            <ComboBox Width="300" Height="35" HorizontalAlignment="Center" Margin="10"
+             Visibility="Visible" Name="diagnose" FontSize="15"/>
+            <Label Width="300" Content="День рождения" FontSize="20" Margin="0 -10 0 -15"/>
+            <DatePicker Width="300" Height="25" FontSize="15" Margin="10" Name="birthday"/>
+            <Grid Margin="0 0 0 0" Width="300" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition Width="0.5*"/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0">
+                    <CheckBox Content="Мужчина" x:Name="male" FontSize="12"
+                              HorizontalAlignment="Center"/>
+                </Grid>
+                <Grid Grid.Column="1">
+                    <CheckBox Content="Женщина" x:Name="female" FontSize="12"
+                              HorizontalAlignment="Center"/>
+                </Grid>
+            </Grid>
+            <Button Width="150" Height="40" Margin="0 10 10 0" Content="Добавить пациента"
+                    FontSize="14" Name="add" Click="add_Click"/>
+            <Label Width="300" Name="error_text" FontSize="20" Margin="20"/>
+        </StackPanel>
+    </Grid>
+</Window>

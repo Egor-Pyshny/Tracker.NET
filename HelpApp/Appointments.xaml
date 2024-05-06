@@ -1,0 +1,44 @@
+﻿<Window x:Class="HelpApp.Appointments"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HelpApp"
+        mc:Ignorable="d" FontSize="20"
+        Title="Appointments" Height="415" Width="600" Closing="Window_Closing">
+    <Grid>
+        <StackPanel>
+            <DataGrid x:Name="datagrid" Height="400" VerticalAlignment="Top"
+          ScrollViewer.VerticalScrollBarVisibility="Visible"
+          AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray"
+          RowBackground="LightGray" AlternatingRowBackground="White">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Больница" Width="120" Binding="{Binding Hospital}" IsReadOnly="True">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style>
+                                <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Дата" Width="110" Binding="{Binding Date}" IsReadOnly="True">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style>
+                                <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Врач" Width="370" Binding="{Binding Doctor}" IsReadOnly="True">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style>
+                                <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+    </Grid>
+</Window>

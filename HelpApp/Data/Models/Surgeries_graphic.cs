@@ -11,7 +11,7 @@ namespace HelpApp.Data.Models
         public int id { get; set; }
         public Hospitals hospital { get; set; }
         public DateTime date { get; set; }
-
+        public Patients patient { get; set; }
         public List<Doctors> Doctors { get; set; } = new();
     }
 }
