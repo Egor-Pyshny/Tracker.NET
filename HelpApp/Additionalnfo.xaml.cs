@@ -91,7 +91,9 @@ namespace HelpApp
             Data data = (Data)datagrid.SelectedItem;
             if (data != null)
             {
-
+                var Application = new Microsoft.Office.Interop.Word.Application();
+                Application.Documents.Open(@"C:\Users\Пользователь\Desktop\КУРСОВАЯ\Course6SEM.docx", ReadOnly: true);
+                Application.Visible = true;
             }
         }
     }
