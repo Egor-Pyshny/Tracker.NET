@@ -24,8 +24,8 @@ namespace Tracker.AppContext
 
             public double XAngle { get; set; }
             public double YAngle { get; set; }
-            public int GameAreaWidth = 1280;
-            public int GameAreaHeight = 720;
+            public int GameAreaWidth = 900;
+            public int GameAreaHeight = 900;
             public double XCenterAngle;
             public double YCenterAngle;
             public IPAddress address = IPAddress.Parse("192.168.150.2");
